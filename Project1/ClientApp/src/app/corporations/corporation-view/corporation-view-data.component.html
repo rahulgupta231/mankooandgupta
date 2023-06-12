@@ -1,0 +1,22 @@
+<h1 id="tableLabel">Corporations</h1>
+
+<p *ngIf="!corporations"><em>Loading...</em></p>
+
+<a [routerLink]="['../corporation-add']" class="btn btn-sm btn-success mb-2">Add Corporations</a>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="corporations">
+  <thead>
+    <tr>
+      <th style="width: 80%">Name</th>
+      <th style="width: 20%"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let corporation of corporations">
+      <td>{{ corporation.name }}</td>
+      <td style="white-space: nowrap">
+        <a routerLink="../corporation-edit/{{corporation.corporationId}}" class="btn btn-sm btn-primary mr-1">Edit</a>
+      </td>
+    </tr>
+  </tbody>
+</table>

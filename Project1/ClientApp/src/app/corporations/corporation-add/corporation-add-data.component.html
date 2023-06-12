@@ -1,0 +1,21 @@
+
+<form [formGroup]="studentForm">
+  <div class="form-group">
+    <input
+      type="text"
+      class="form-control w-100"
+      formControlName="name"
+      name="name"
+      placeholder="Name">
+  </div>
+
+  <br>
+  <div class="form-group">
+    <button class="btn btn-primary" (click)="onSubmit()">Save</button>
+    <a routerLink="/corporation-view" class="btn btn-link">Cancel</a>
+  </div>
+
+</form>
+
+
+

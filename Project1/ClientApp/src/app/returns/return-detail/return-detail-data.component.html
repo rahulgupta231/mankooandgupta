@@ -1,0 +1,73 @@
+<h1 id="tableLabel" *ngIf="returnManagement">{{returnManagement.returnManagementName}} Return</h1>
+
+<p *ngIf="!returnManagement"><em>Loading...</em></p>
+
+
+<div>
+
+  <mat-form-field style="width: 200px;margin-left:10px;">
+    <mat-label> Filter Filed Status </mat-label>
+    <select matNativeControl name="clientStatus"
+            (change)="filterFiledStatus($event)">
+      <option value="all"> All </option>
+      <option value="true"> Yes </option>
+      <option value="false" selected> No </option>
+    </select>
+  </mat-form-field>
+
+  <mat-form-field style="width: 200px; margin-left: 10px;">
+    <mat-label> Filter Categories </mat-label>
+    <select matNativeControl name="categories"
+            (change)="filterCategoryChange($event)">
+      <option value="all"> All </option>
+      <option *ngFor="let filter of categories" [value]="filter.categoryId">{{filter.name}}</option>
+    </select>
+  </mat-form-field>
+
+  <mat-form-field style="width: 200px; margin-left: 10px;">
+    <mat-label> Filter HST Period </mat-label>
+    <select matNativeControl name="categories"
+            (change)="filterHstPeriod($event)">
+      <option value="all"> All </option>
+      <option *ngFor="let c of hstPeriodDrownDown" [value]="c">{{c}}      </option>
+    </select>
+  </mat-form-field>
+  <a (click)="generateExcel()" style="margin-left: 15px" class="btn btn-sm btn-primary mr-1">Export To Excel</a>
+
+
+</div>
+
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="returnManagement">
+  <thead>
+    <tr>
+      <th style="width: 10%">Serial Number</th>
+      <th style="width: 10%">Client Name</th>
+      <th style="width: 10%">Company Name</th>
+      <th style="width: 10%">Category</th>
+      <th style="width: 15%">Email</th>
+      <th style="width: 10%">Phone Number</th>
+      <th style="width: 10%">Business#</th>
+      <th style="width: 10%">Filed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let client of returnManagement.clientReturns">
+      <td>{{ client.client.serialNumber }}</td>
+      <td><a href="client-detail/{{client.client.clientId}}">{{ client.client.clientName }}</a> </td>
+      <td>{{ client.client.companyName }}</td>
+      <td>{{ client.client.categoryName }}</td>
+      <td>{{ client.client.email }}</td>
+      <td>{{ client.client.phoneNumber }}</td>
+      <td>{{ client.client.business }}</td>
+      <td>
+        <select class="form-control" id="status" [(ngModel)]="client.filed" (change)="onFiledChange(client.client.clientId, $event)">
+          <option value="false">No</option>
+          <option value="true">Yes</option>
+        </select>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<a [routerLink]="['../../return-view']" class="btn btn-sm btn-success mb-2">Back</a>

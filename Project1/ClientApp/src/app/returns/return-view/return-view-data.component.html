@@ -1,0 +1,45 @@
+<h1 id="tableLabel">Returns</h1>
+
+<p *ngIf="!returnManagementVMList"><em>Loading...</em></p>
+
+
+
+<div class="mat-app-background basic-container">
+
+  <div>
+
+    <mat-table [dataSource]="dataSource" matSort>
+
+      <!-- Serial Number Column -->
+      <ng-container matColumnDef="returnManagementName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Return Period </mat-header-cell>
+        <mat-cell *matCellDef="let row"> <a routerLink="../return-detail/{{row.returnManagementId}}"> {{row.returnManagementName}}</a> </mat-cell>
+      </ng-container>
+
+      <!-- Client Name Column -->
+      <!--<ng-container matColumnDef="hstPeriod">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> HST Period </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.hstPeriod}} </mat-cell>
+      </ng-container>-->
+
+      
+
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Actions </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <a routerLink="../return-edit/{{row.returnManagementId}}" class="btn btn-sm btn-primary mr-1">Edit</a>
+          <!--<a routerLink="../audit-view/{{row.clientId}}" class="btn btn-sm btn-primary mr-1" style="margin-left:5px;">Logs</a>-->
+        </mat-cell>
+      </ng-container>
+
+
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;">
+      </mat-row>
+    </mat-table>
+
+    <mat-paginator [pageSizeOptions]="[50, 100, 500, 1000, 2000, 5000]"></mat-paginator>
+  </div>
+
+</div>

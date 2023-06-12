@@ -1,0 +1,91 @@
+<h1 id="tableLabel">Audit Logs</h1>
+
+<p *ngIf="!auditLogs"><em>Loading...</em></p>
+
+<!--<div class="search-hero">
+  <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" placeholder="&#61442;  Start searching for a hero by id or name or country">
+</div>-->
+
+<!--<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="clients">
+  <thead>
+    <tr>
+      <th style="width: 15%">Client Name</th>
+      <th style="width: 15%">Company Name</th>
+      <th style="width: 15%">Email</th>
+      <th style="width: 20%">Address</th>
+      <th style="width: 15%">Phone Number</th>
+      <th style="width: 15%">Business#</th>
+      <th style="width: 5%"></th>
+      <th style="width: 5%"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let client of clients | filter: searchText">
+      <td>{{ client.clientName }}</td>
+      <td>{{ client.companyName }}</td>
+      <td>{{ client.email }}</td>
+      <td>{{ client.address }}</td>
+      <td>{{ client.phoneNumber }}</td>
+      <td>{{ client.business }}</td>
+      <td style="white-space: nowrap">
+        <a routerLink="../client-edit/{{client.clientId}}" class="btn btn-sm btn-primary mr-1">Edit</a>
+      </td>
+      <td style="white-space: nowrap">
+        <a routerLink="../client-detail/{{client.clientId}}" class="btn btn-sm btn-primary mr-1">View</a>
+      </td>
+    </tr>
+  </tbody>
+</table>-->
+
+<div class="mat-app-background basic-container">
+
+  <div class="example-header">
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Filter">
+    </mat-form-field>
+  </div>
+
+  <div>
+
+    <mat-table [dataSource]="dataSource" matSort>
+
+      <!-- changedBy Column -->
+      <ng-container matColumnDef="changedBy">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Changed By </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.changedBy}} </mat-cell>
+      </ng-container>
+
+      <!-- Action Column -->
+      <ng-container matColumnDef="action">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Action </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.action}}% </mat-cell>
+      </ng-container>
+
+      <!-- Updated Column -->
+      <ng-container matColumnDef="updated">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Updated </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.updated}} </mat-cell>
+      </ng-container>
+
+      <!-- Previous Column -->
+      <ng-container matColumnDef="previous">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Previous </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.previous}} </mat-cell>
+      </ng-container>
+
+      <!-- Changed Date Column -->
+      <ng-container matColumnDef="changedDate">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Changed Date </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.changedDate}} </mat-cell>
+      </ng-container>
+
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;">
+      </mat-row>
+    </mat-table>
+
+    <mat-paginator [pageSizeOptions]="[25, 50, 100, 500]"></mat-paginator>
+  </div>
+
+</div>

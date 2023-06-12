@@ -1,0 +1,141 @@
+<h1 id="tableLabel">Clients</h1>
+
+<p *ngIf="!clients"><em>Loading...</em></p>
+
+
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="clients">
+  <thead>
+    <tr>
+      <th style="width: 30%">Field</th>
+      <th style="width: 30%">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+      <td>Serial Number</td>
+      <td>{{ clients.serialNumber }}</td>
+
+    </tr>
+
+
+    <tr>
+      <td>Client name</td>
+      <td>{{ clients.clientName }}</td>
+    </tr>
+    <tr>
+      <td>Company Name</td>
+      <td>{{ clients.companyName }}</td>
+
+    </tr>
+    <tr>
+      <td>Email</td>
+      <td>{{ clients.email }}</td>
+
+
+    </tr>
+    <tr>
+      <td>Address</td>
+      <td>{{ clients.address }}</td>
+
+    </tr>
+    <tr>
+      <td>Phone Number</td>
+      <td>{{ clients.phoneNumber }}</td>
+
+    </tr>
+    <tr>
+      <td>Business</td>
+      <td>{{ clients.business }}</td>
+
+    </tr>
+    <tr>
+      <td>Category Name</td>
+      <td>{{ clients.categoryName }}</td>
+
+    </tr>
+    <tr>
+      <td>Company Key</td>
+      <td>{{ clients.companyKey }}</td>
+
+    </tr>
+    <tr>
+      <td>Corporation Key</td>
+      <td>{{ clients.corporationKey }}</td>
+
+    </tr>
+    <tr>
+      <td>Corporation Type</td>
+      <td>{{ clients.corporationType }}</td>
+
+    </tr>
+    <tr>
+      <td>HST Period</td>
+      <td>{{ clients.hstPeriod }}</td>
+
+    </tr>
+    <tr>
+      <td>Incorporation Date</td>
+      <td>{{ clients.incorporationDate }}</td>
+
+    </tr>
+    <tr>
+      <td>Incorporation Month</td>
+      <td>{{ clients.incorporationMonth }}</td>
+
+    </tr>
+    <tr>
+      <td>Status</td>
+      <td>{{ clients.status }}</td>
+
+    </tr>
+    <tr>
+      <td>Year End</td>
+      <td>{{ clients.yearEnd }}</td>
+
+    </tr>
+
+    <tr>
+      <td>Ontario One Key User</td>
+      <td>{{ clients.ontarioOneKeyUser }}</td>
+
+    </tr>
+
+    <tr>
+      <td>Ontario One Key Password</td>
+      <td>{{ clients.ontarioOneKeyPassword }}</td>
+
+    </tr>
+
+
+    <tr>
+      <td>CRA UserId</td>
+      <td>{{ clients.craUserId }}</td>
+
+    </tr>
+
+
+    <tr>
+      <td>CRA Password</td>
+      <td>{{ clients.craPassword }}</td>
+
+    </tr>
+
+
+    <tr>
+      <td>Notes</td>
+      <td>{{ clients.notes }}</td>
+
+    </tr>
+
+    <tr>
+      <td>Additional Notes</td>
+      <td>{{ clients.additionalNotes }}</td>
+
+    </tr>
+
+  </tbody>
+</table>
+
+<a href="javascript:history.back()" class="btn btn-sm btn-success mb-2">Back</a>

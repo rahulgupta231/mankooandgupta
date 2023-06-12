@@ -1,0 +1,154 @@
+<h1 id="tableLabel">Clients</h1>
+
+<p *ngIf="!clients"><em>Loading...</em></p>
+
+<a [routerLink]="['../client-add']" class="btn btn-sm btn-success mb-2">Add Clients</a>
+
+<!--<div class="search-hero">
+  <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" placeholder="&#61442;  Start searching for a hero by id or name or country">
+</div>-->
+
+<!--<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="clients">
+  <thead>
+    <tr>
+      <th style="width: 15%">Client Name</th>
+      <th style="width: 15%">Company Name</th>
+      <th style="width: 15%">Email</th>
+      <th style="width: 20%">Address</th>
+      <th style="width: 15%">Phone Number</th>
+      <th style="width: 15%">Business#</th>
+      <th style="width: 5%"></th>
+      <th style="width: 5%"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let client of clients | filter: searchText">
+      <td>{{ client.clientName }}</td>
+      <td>{{ client.companyName }}</td>
+      <td>{{ client.email }}</td>
+      <td>{{ client.address }}</td>
+      <td>{{ client.phoneNumber }}</td>
+      <td>{{ client.business }}</td>
+      <td style="white-space: nowrap">
+        <a routerLink="../client-edit/{{client.clientId}}" class="btn btn-sm btn-primary mr-1">Edit</a>
+      </td>
+      <td style="white-space: nowrap">
+        <a routerLink="../client-detail/{{client.clientId}}" class="btn btn-sm btn-primary mr-1">View</a>
+      </td>
+    </tr>
+  </tbody>
+</table>-->
+
+<div>
+  <mat-form-field style="width: 200px;">
+    <mat-label> Filter Categories </mat-label>
+    <select matNativeControl name="categories"
+            (change)="filterCategoryChange($event)">
+      <option value="all"> All </option>
+      <option *ngFor="let filter of categories" [value]="filter.categoryId">{{filter.name}}</option>
+    </select>
+  </mat-form-field>
+
+  <mat-form-field style="width: 200px;margin-left:10px;">
+    <mat-label> Filter Corporations </mat-label>
+    <select matNativeControl name="corporations"
+            (change)="filterCorporationChange($event)">
+      <option value="all"> All </option>
+      <option *ngFor="let filter of corporations" [value]="filter.corporationId">{{filter.name}}</option>
+    </select>
+  </mat-form-field>
+
+  <mat-form-field style="width: 200px;margin-left:10px;">
+    <mat-label> Filter Client Status </mat-label>
+    <select matNativeControl name="clientStatus"
+            (change)="filterClientStatus($event)">
+      <option value="all"> All </option>
+      <option value="true"> Active </option>
+      <option value="false"> Inactive </option>
+    </select>
+  </mat-form-field>
+</div>
+
+<div class="mat-app-background basic-container">
+
+  
+
+  <div class="example-header">
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Filter">
+    </mat-form-field>
+  </div>
+
+  <div>
+
+    <mat-table [dataSource]="dataSource" matSort>
+
+      <!-- Serial Number Column -->
+      <ng-container matColumnDef="serialNumber">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Serial Number </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.serialNumber}} </mat-cell>
+      </ng-container>
+
+      <!-- Client Name Column -->
+      <ng-container matColumnDef="clientName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Client Name </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.clientName}} </mat-cell>
+      </ng-container>
+
+      <!-- Category Name Column -->
+      <ng-container matColumnDef="categoryName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Category Name </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.categoryName}} </mat-cell>
+      </ng-container>
+
+      <!-- Company Column -->
+      <ng-container matColumnDef="companyName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Company Name </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.companyName}} </mat-cell>
+      </ng-container>
+
+      <!-- Email Column -->
+      <ng-container matColumnDef="email">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.email}} </mat-cell>
+      </ng-container>
+
+      <!-- Address Column -->
+      <ng-container matColumnDef="address">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Address </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.address}} </mat-cell>
+      </ng-container>
+
+      <!-- Phone Number Column -->
+      <ng-container matColumnDef="phoneNumber">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Phone Number </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.phoneNumber}} </mat-cell>
+      </ng-container>
+
+      <!-- Business Column -->
+      <ng-container matColumnDef="business">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Business </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.business}} </mat-cell>
+      </ng-container>
+      <!-- Edit Column -->
+
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Actions </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <a routerLink="../client-edit/{{row.clientId}}" class="btn btn-sm btn-primary mr-1">Edit</a>
+          <a routerLink="../client-detail/{{row.clientId}}" class="btn btn-sm btn-primary mr-1" style="margin-left:5px;">View</a>
+          <a routerLink="../audit-view/{{row.clientId}}" class="btn btn-sm btn-primary mr-1" style="margin-left:5px;">Logs</a>
+        </mat-cell>
+      </ng-container>
+
+
+
+      <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;">
+      </mat-row>
+    </mat-table>
+
+    <mat-paginator [pageSizeOptions]="[50, 100, 500, 1000, 2000, 5000]"></mat-paginator>
+  </div>
+
+</div>

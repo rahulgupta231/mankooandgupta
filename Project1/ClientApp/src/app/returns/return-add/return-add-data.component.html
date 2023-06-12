@@ -1,0 +1,28 @@
+
+<form [formGroup]="returnManagementForm" (ngSubmit)="onSubmit()">
+  <div class="form-row">
+    <div class="form-group col-5">
+      <label>Return Period</label>
+      <input type="text" formControlName="returnManagementName" class="form-control" />
+    </div>
+
+    <!--<div class="form-group col-5">
+      <label>HST Period</label>
+      <select class="form-control" id="status" formControlName="hstPeriod" >
+        <option value="default">--Select a HST Period--</option>
+        <option *ngFor="let c of hstPeriodDrownDown" [value]="c">{{c}}      </option>
+      </select>
+
+    </div>-->
+  </div>
+
+  <br>
+  <div class="form-group">
+    <button class="btn btn-primary">Save</button>
+    <a routerLink="/return-view" class="btn btn-link">Cancel</a>
+  </div>
+
+</form>
+
+
+
