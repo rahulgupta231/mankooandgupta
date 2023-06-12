@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Net.Mail;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -190,48 +191,35 @@ public static class Serializer
 
     public static void SendEmail()
     {
+
         try
         {
-            MailMessage msgs = new MailMessage();
-            msgs.To.Add("kanwardeep.gupta@gmail.com");
-            MailAddress address = new MailAddress("info@mankooguptacpa.com");
-            msgs.From = address;
-            msgs.Subject = "Contact";
-            string htmlBody = @"
-<!DOCTYPE html >
-        
-                <
-                html >
-        
-                <
-                head >
-        
-                <
-                title > Email < / title > <
-        
-                / head > <
-                body >
-        
-                <
-            h1 > Hi welcome < / h1 > <
-                p > Thank you
-    for register < / p > <
-        / body > <
-        / html >
-    ";  
-    msgs.Body = htmlBody;
-    msgs.IsBodyHtml = true;
-    SmtpClient client = new SmtpClient();
-            client.Host = "relay-hosting.secureserver.net";
-            client.Port = 25;
-            client.UseDefaultCredentials = false;
-            client.Credentials = new System.Net.NetworkCredential("relay-hosting.secureserver.net", @"Krish""015");
-            //Send the msgs  
-            client.Send(msgs);
+            string smtpServer = "smtp.office365.com";
+            int smtpPort = 587;
+            string email = "info@mankooguptacpa.com";
+            string password = "Krish\"015";
+            SmtpClient client1 = new SmtpClient(smtpServer, smtpPort);
+            client1.UseDefaultCredentials = false;
+
+            client1.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client1.EnableSsl = true;
+            client1.ServicePoint.MaxIdleTime = 1;
+            //client1.Timeout = 100000;
+
+            client1.Credentials = new NetworkCredential(email, password);
+
+            MailMessage message = new MailMessage();
+            message.From = new MailAddress(email);
+            message.To.Add("guptrahul23@gmail.com");
+            message.Subject = "Subject";
+            message.Body = "Body";
+            client1.Send(message);
         }
-        catch (Exception ex) { }
+        catch (Exception ex)
+        {
 
 
 
+        }
     }
 }
