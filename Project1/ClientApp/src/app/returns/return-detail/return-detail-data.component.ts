@@ -2,6 +2,10 @@ import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectionModel } from "@angular/cdk/collections";
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { EmailFormComponent } from '../email-form/email-form.component';
 
 @Component({
   selector: 'app-fetch-data',
@@ -15,12 +19,21 @@ export class ReturnDetailDataComponent {
   public categories: Categories[] = [];
   hstPeriodDrownDown: string[] = [];
 
+  dataSource!: MatTableDataSource<ClientReturns>;
+
+  displayedColumns = ['select','serialNumber', 'clientName', 'categoryName', 'companyName', 'email', 'address', 'phoneNumber', 'business', 'filed'];
+
+
   selectedCategoryId: string = "all";
   selectedHstPeriod: string = "all";
   selectedFiledStatus: string = "false";
 
+  selection = new SelectionModel<ClientReturns>(true, []);
+
+
   constructor(
     private route: ActivatedRoute,
+    private dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
     @Inject('BASE_URL') baseUrl: string
@@ -46,11 +59,14 @@ export class ReturnDetailDataComponent {
         .subscribe(result => {
           this.returnManagement = result;
 
+          
+
+
           this.returnManagement.clientReturns = this.returnManagement.clientReturns.filter(function (el) {
             return el.filed == "false"
           })
 
-          
+          this.dataSource = new MatTableDataSource(this.returnManagement.clientReturns);
           console.log(this.id)
           console.log(result)
         }, error => console.error(error));
@@ -112,6 +128,7 @@ export class ReturnDetailDataComponent {
     this.http.get<ReturnManagement>(this.baseUrl + 'weatherforecast/return-fitler/' + this.id + '?categoryName=' + this.selectedCategoryId + '&hstPeriod=' + this.selectedHstPeriod + '&filedStatus=' + this.selectedFiledStatus).subscribe(result => {
       this.returnManagement = result;
 
+      
       console.log(this.selectedFiledStatus)
 
       if (this.selectedFiledStatus == "false") {
@@ -124,6 +141,9 @@ export class ReturnDetailDataComponent {
           return el.filed == "true"
         })
       }
+
+
+      this.dataSource = new MatTableDataSource(this.returnManagement.clientReturns);
      
       console.log(this.returnManagement)
     }, error => console.error(error));
@@ -133,6 +153,37 @@ export class ReturnDetailDataComponent {
     this.http.get<ReturnManagement>(this.baseUrl + 'weatherforecast/generate-excel/' + this.id).subscribe(result => {
       console.log(result)
     }, error => console.error(error));
+  }
+
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    // if there is a selection then clear that selection
+    if (this.isSomeSelected()) {
+      this.selection.clear();
+    } else {
+      this.isAllSelected()
+        ? this.selection.clear()
+        : this.dataSource.data.forEach(row => this.selection.select(row));
+    }
+  }
+
+  isSomeSelected() {
+    console.log(this.selection.selected);
+    return this.selection.selected.length > 0;
+  }
+
+  sendEmail() {
+    const dialogRef = this.dialog.open(EmailFormComponent, {
+      width: "50%",
+      height: "50%",
+    });
   }
 }
 

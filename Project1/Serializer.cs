@@ -146,6 +146,22 @@ public static class Serializer
             workSheet.Cells[1, 5].Value = "Phone Number";
             workSheet.Cells[1, 6].Value = "Business#";
             workSheet.Cells[1, 7].Value = "Filed";
+            workSheet.Cells[1, 8].Value = "HSTPeriod";
+            workSheet.Cells[1, 9].Value = "Additional Notes";
+            workSheet.Cells[1, 10].Value = "Address";
+            workSheet.Cells[1, 11].Value = "Category Name";
+            workSheet.Cells[1, 12].Value = "Company Key";
+            workSheet.Cells[1, 13].Value = "Corporation Key";
+            workSheet.Cells[1, 14].Value = "Corporation Type";
+            workSheet.Cells[1, 15].Value = "CRA Password";
+            workSheet.Cells[1, 16].Value = "CRA User Id";
+            workSheet.Cells[1, 17].Value = "Incorporation Date";
+            workSheet.Cells[1, 18].Value = "Incorporation Month";
+            workSheet.Cells[1, 19].Value = "Notes";
+            workSheet.Cells[1, 20].Value = "Ontario One Key Password";
+            workSheet.Cells[1, 21].Value = "Ontario One Key User";
+            workSheet.Cells[1, 22].Value = "Status";
+            workSheet.Cells[1, 23].Value = "Year End";
 
 
             int recordIndex = 2;
@@ -159,6 +175,28 @@ public static class Serializer
                 workSheet.Cells[recordIndex, 5].Value = client.Client.PhoneNumber;
                 workSheet.Cells[recordIndex, 6].Value = client.Client.Business;
                 workSheet.Cells[recordIndex, 7].Value = client.Filed == "true" ? "Yes" : "No";
+
+
+                workSheet.Cells[recordIndex, 8].Value = client.Client.HSTPeriod;
+                workSheet.Cells[recordIndex, 9].Value = client.Client.AdditionalNotes;
+                workSheet.Cells[recordIndex, 10].Value = client.Client.Address;
+                workSheet.Cells[recordIndex, 11].Value = client.Client.CategoryName;
+                workSheet.Cells[recordIndex, 12].Value = client.Client.CompanyKey;
+                workSheet.Cells[recordIndex, 13].Value = client.Client.CorporationKey;
+                workSheet.Cells[recordIndex, 14].Value = client.Client.CorporationType;
+                workSheet.Cells[recordIndex, 15].Value = client.Client.CRAPassword;
+                workSheet.Cells[recordIndex, 16].Value = client.Client.CRAUserId;
+                workSheet.Cells[recordIndex, 17].Value = client.Client.IncorporationDate;
+                workSheet.Cells[recordIndex, 18].Value = client.Client.IncorporationMonth;
+                workSheet.Cells[recordIndex, 19].Value = client.Client.Notes;
+                workSheet.Cells[recordIndex, 20].Value = client.Client.OntarioOneKeyPassword;
+                workSheet.Cells[recordIndex, 21].Value = client.Client.OntarioOneKeyUser;
+                workSheet.Cells[recordIndex, 22].Value = client.Client.Status;
+                workSheet.Cells[recordIndex, 23].Value = client.Client.YearEnd;
+
+
+
+
                 recordIndex++;
             }
 
@@ -169,6 +207,22 @@ public static class Serializer
             workSheet.Column(5).AutoFit();
             workSheet.Column(6).AutoFit();
             workSheet.Column(7).AutoFit();
+            workSheet.Column(8).AutoFit();
+            workSheet.Column(9).AutoFit();
+            workSheet.Column(10).AutoFit();
+            workSheet.Column(11).AutoFit();
+            workSheet.Column(12).AutoFit();
+            workSheet.Column(13).AutoFit();
+            workSheet.Column(14).AutoFit();
+            workSheet.Column(15).AutoFit();
+            workSheet.Column(16).AutoFit();
+            workSheet.Column(17).AutoFit();
+            workSheet.Column(18).AutoFit();
+            workSheet.Column(19).AutoFit();
+            workSheet.Column(20).AutoFit();
+            workSheet.Column(21).AutoFit();
+            workSheet.Column(22).AutoFit();
+            workSheet.Column(23).AutoFit();
 
             string p_strPath = @"C:\POC\DeepXML\" +  returnManagement.ReturnManagementName + ".xlsx";
 

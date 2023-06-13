@@ -31,6 +31,9 @@ import { AuditLogsViewComponent } from './audits/audit-view/audit-view-data.comp
 import { ReturnViewComponent } from './returns/return-view/return-view-data.component';
 import { ReturnAddDataComponent } from './returns/return-add/return-add-data.component';
 import { ReturnDetailDataComponent } from './returns/return-detail/return-detail-data.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { EmailFormComponent } from './returns/email-form/email-form.component';
 
 const modules = [
   MatFormFieldModule,
@@ -41,7 +44,9 @@ const modules = [
   MatSortModule,
   MatTableModule,
   MatTooltipModule,
-  MatInputModule
+  MatInputModule,
+  MatCheckboxModule,
+  MatDialogModule
 ];
 
 @NgModule({
@@ -61,7 +66,8 @@ const modules = [
     AuditLogsViewComponent,
     ReturnViewComponent,
     ReturnAddDataComponent,
-    ReturnDetailDataComponent
+    ReturnDetailDataComponent,
+    EmailFormComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
