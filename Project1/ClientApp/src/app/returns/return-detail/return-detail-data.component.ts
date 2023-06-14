@@ -175,15 +175,43 @@ export class ReturnDetailDataComponent {
   }
 
   isSomeSelected() {
-    console.log(this.selection.selected);
     return this.selection.selected.length > 0;
   }
 
   sendEmail() {
-    const dialogRef = this.dialog.open(EmailFormComponent, {
+
+    const dialogRef = this.dialog.open(EmailFormComponent,
+      {
       width: "50%",
       height: "50%",
-    });
+
+      },
+
+
+    );
+
+    dialogRef.afterClosed().subscribe(data => {
+
+      var emails = this.selection.selected.map(function (el) {
+        return el.client.email
+      });
+
+      console.log(this.selection.selected.map(function (el) {
+        return el.client.email
+      }))
+      console.log("Dialog output:", data)
+
+      let payload = {
+        subject: data.description,
+        body: data.body,
+        emails: emails
+      }
+
+      this.http.post(this.baseUrl + `weatherforecast/send-email`, payload)
+        .subscribe(result => {
+          
+        }, error => { });
+    });    
   }
 }
 

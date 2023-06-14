@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatFormField } from '@angular/material/form-field';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-fetch-data',
@@ -13,8 +14,26 @@ import { MatDialogRef, MatDialog } from '@angular/material/dialog';
   styleUrls: ['email-form.component.css'],
 })
 export class EmailFormComponent {
- 
-  constructor(
-    public dialogRef: MatDialogRef<EmailFormComponent>) { }
+  form!: FormGroup;
+  description!: string;
+  body: string = "Thanks & Regards, \nMankoo & Gupta Associates";
+
+  constructor(private fb: FormBuilder, public dialogRef: MatDialogRef<EmailFormComponent>) { }
+
+  ngOnInit() {
+    this.form = this.fb.group({
+      description: [this.description, []],
+      body: [this.body, []],
+        });
+  }
+
+  save() {
+    this.dialogRef.close(this.form.value);
+  }
+
+  close() {
+    this.dialogRef.close();
+  }
+
 }
 

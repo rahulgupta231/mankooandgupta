@@ -1,13 +1,24 @@
-<div>
-  <label>
-    Subject
-  </label>
-  <input type="text" />
+<h2 mat-dialog-title>Email</h2>
 
-  <label>
-    Body
-  </label>
-  <textarea>
+<mat-dialog-content [formGroup]="form">
 
-</textarea>
-</div>
+  <mat-form-field>
+    <input matInput
+           placeholder="Email Subject"
+           formControlName="description">
+  </mat-form-field>
+
+  <mat-form-field>
+    <textarea matInput
+           placeholder="Email Body"
+           formControlName="body"
+              style="height:250px;">
+    </textarea>
+  </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button class="mat-raised-button" (click)="close()">Close</button>
+  <button class="mat-raised-button mat-primary" style="margin-left:15px;" (click)="save()">Send</button>
+</mat-dialog-actions>

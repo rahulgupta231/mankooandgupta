@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Common;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using static OfficeOpenXml.ExcelErrorValue;
 
 namespace Project1;
 
@@ -224,7 +226,12 @@ public static class Serializer
             workSheet.Column(22).AutoFit();
             workSheet.Column(23).AutoFit();
 
+#if DEBUG
             string p_strPath = @"C:\POC\DeepXML\" +  returnManagement.ReturnManagementName + ".xlsx";
+#else
+            string p_strPath = @"D:\Data\Mankoo & Gupta\ExportedExcelM&G\" + returnManagement.ReturnManagementName + ".xlsx";
+#endif
+
 
             if (File.Exists(p_strPath))
                 File.Delete(p_strPath);
@@ -243,31 +250,50 @@ public static class Serializer
         }
     }
 
-    public static void SendEmail()
+    public static void SendEmail(SendEmail payload)
     {
 
         try
         {
-            string smtpServer = "smtp.office365.com";
-            int smtpPort = 587;
-            string email = "info@mankooguptacpa.com";
-            string password = "Krish\"015";
-            SmtpClient client1 = new SmtpClient(smtpServer, smtpPort);
-            client1.UseDefaultCredentials = false;
+            List<List<string>> partitions = payload.Emails.partition(100);
 
-            client1.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client1.EnableSsl = true;
-            client1.ServicePoint.MaxIdleTime = 1;
-            //client1.Timeout = 100000;
+            foreach (List<string> partition in partitions)
+            {
+                try
+                {
+                    string smtpServer = "smtp.office365.com";
+                    int smtpPort = 587;
+                    string email = "info@mankooguptacpa.com";
+                    string password = "Krish\"015";
+                    SmtpClient client1 = new SmtpClient(smtpServer, smtpPort);
+                    client1.UseDefaultCredentials = false;
 
-            client1.Credentials = new NetworkCredential(email, password);
+                    client1.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client1.EnableSsl = true;
+                    client1.ServicePoint.MaxIdleTime = 1;
+                    //client1.Timeout = 100000;
 
-            MailMessage message = new MailMessage();
-            message.From = new MailAddress(email);
-            message.To.Add("guptrahul23@gmail.com");
-            message.Subject = "Subject";
-            message.Body = "Body";
-            client1.Send(message);
+                    client1.Credentials = new NetworkCredential(email, password);
+
+                    MailMessage message = new MailMessage();
+                    message.From = new MailAddress(email);
+#if DEBUG
+                    message.Bcc.Add("guptrahul23@gmail.com,kanwardeep.gupta@gmail.com");
+#else
+                    message.Bcc.Add(string.Join(',', partition));
+#endif
+                    message.Subject = payload.Subject;
+                    message.Body = payload.Body;
+                    client1.Send(message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+
+            
+            
         }
         catch (Exception ex)
         {
@@ -275,5 +301,18 @@ public static class Serializer
 
 
         }
+    }
+
+
+}
+
+public static class Extensions
+{
+    public static List<List<T>> partition<T>(this List<T> values, int chunkSize)
+    {
+        return values.Select((x, i) => new { Index = i, Value = x })
+            .GroupBy(x => x.Index / chunkSize)
+            .Select(x => x.Select(v => v.Value).ToList())
+            .ToList();
     }
 }

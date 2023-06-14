@@ -34,7 +34,7 @@
   </mat-form-field>
   <a (click)="generateExcel()" style="margin-left: 15px" class="btn btn-sm btn-primary mr-1">Export To Excel</a>
 
-  <a (click)="sendEmail()" style="margin-left: 15px" class="btn btn-sm btn-primary mr-1">Send Email</a>
+  <a *ngIf="selection.selected.length > 0" (click)="sendEmail()" style="margin-left: 15px" class="btn btn-sm btn-primary mr-1">Send Email</a>
 </div>
 
 <div>

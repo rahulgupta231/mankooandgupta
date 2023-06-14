@@ -39,7 +39,11 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Categories.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Categories.xml";
+#endif
 
                 #region Read Data from Client XML
 
@@ -89,7 +93,12 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Categories.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Categories.xml";
+#endif
+
                 var categories = Serializer.Deserialize<List<Categories>>(path);
 
                 var categoryById = categories.FirstOrDefault(x => x.CategoryId == id);
@@ -108,7 +117,11 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Categories.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Categories.xml";
+#endif
                 var categories = Serializer.Deserialize<List<Categories>>(path);
 
                 var isExisting = categories.FirstOrDefault(x => x.Name.ToLower() == category.Name.Trim().ToLower());
@@ -137,7 +150,12 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Categories.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Categories.xml";
+#endif
+
                 var categories = Serializer.Deserialize<List<Categories>>(path);
 
                 var isExisting = categories.FirstOrDefault(x => x.Name.ToLower() == category.Name.Trim().ToLower());
@@ -163,7 +181,12 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Corporations.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Corporations.xml";
+#endif
+
 
                 #region Read Data from Client XML
 
@@ -209,7 +232,12 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Corporations.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Corporations.xml";
+#endif
+
                 var corporations = Serializer.Deserialize<List<Corporation>>(path);
 
                 var corporationById = corporations.FirstOrDefault(x => x.CorporationId == id);
@@ -228,7 +256,12 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Corporations.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Corporations.xml";
+#endif
+
                 var corporations = Serializer.Deserialize<List<Corporation>>(path);
 
                 var isExisting = corporations.FirstOrDefault(x => x.Name.ToLower() == corporation.Name.Trim().ToLower());
@@ -258,7 +291,12 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Corporations.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Corporations.xml";
+#endif
+
                 var corporations = Serializer.Deserialize<List<Corporation>>(path);
 
                 var isExisting = corporations.FirstOrDefault(x => x.Name.ToLower() == corporation.Name.Trim().ToLower());
@@ -286,13 +324,24 @@ namespace Project1.Controllers
             {
                 //List<Clients>  test = Serializer.getExcelFile();
 
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Clients.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Clients.xml";
+#endif
+
+
 
                 //Serializer.Serialize(test, path);
 
                 var clients = Serializer.Deserialize<List<Clients>>(path);
 
+#if DEBUG
                 var catpath = @"C:\POC\DeepXML\Categories.xml";
+#else
+                var catpath = @"D:\Data\Mankoo & Gupta\IISM&G\Categories.xml";
+#endif
+
                 var categories = Serializer.Deserialize<List<Categories>>(catpath);
 
                 #region
@@ -346,14 +395,28 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Clients.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Clients.xml";
+#endif
+
                 var clients = Serializer.Deserialize<List<Clients>>(path);
                 var clientsById = clients.FirstOrDefault(x => x.ClientId == id);
 
+#if DEBUG
                 var catpath = @"C:\POC\DeepXML\Categories.xml";
+#else
+                var catpath = @"D:\Data\Mankoo & Gupta\IISM&G\Categories.xml";
+#endif
                 var categories = Serializer.Deserialize<List<Categories>>(catpath);
 
+#if DEBUG
                 var corppath = @"C:\POC\DeepXML\Corporations.xml";
+#else
+                var corppath = @"D:\Data\Mankoo & Gupta\IISM&G\Corporations.xml";
+#endif
+
                 var corporations = Serializer.Deserialize<List<Corporation>>(corppath);
 
 
@@ -384,14 +447,28 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Clients.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Clients.xml";
+#endif
+
                 var clients = Serializer.Deserialize<List<Clients>>(path);
 
 
+#if DEBUG
                 var catpath = @"C:\POC\DeepXML\Categories.xml";
+#else
+                var catpath = @"D:\Data\Mankoo & Gupta\IISM&G\Categories.xml";
+#endif
                 var categories = Serializer.Deserialize<List<Categories>>(catpath);
 
+#if DEBUG
                 var corppath = @"C:\POC\DeepXML\Corporations.xml";
+#else
+                var corppath = @"D:\Data\Mankoo & Gupta\IISM&G\Corporations.xml";
+#endif
+
                 var corporations = Serializer.Deserialize<List<Corporation>>(corppath);
 
 
@@ -424,7 +501,12 @@ namespace Project1.Controllers
 
                 Serializer.Serialize(clients, path);
 
+#if DEBUG
                 var auditLogspath = @"C:\POC\DeepXML\AuditLogs.xml";
+#else
+                var auditLogspath = @"D:\Data\Mankoo & Gupta\IISM&G\AuditLogs.xml";
+#endif
+
                 var auditLogs = Serializer.Deserialize<List<AuditLogs>>(auditLogspath);
 
                 var auditLog = new AuditLogs
@@ -455,7 +537,11 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Clients.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Clients.xml";
+#endif
                 var clients = Serializer.Deserialize<List<Clients>>(path);
 
                 var clientDB = clients.FirstOrDefault(x => x.ClientId == id);
@@ -471,10 +557,19 @@ namespace Project1.Controllers
                     ClientId = id.ToString()
                 };
 
+#if DEBUG
                 var catpath = @"C:\POC\DeepXML\Categories.xml";
+#else
+                var catpath = @"D:\Data\Mankoo & Gupta\IISM&G\Categories.xml";
+#endif
                 var categories = Serializer.Deserialize<List<Categories>>(catpath);
 
+#if DEBUG
                 var corppath = @"C:\POC\DeepXML\Corporations.xml";
+#else
+                var corppath = @"D:\Data\Mankoo & Gupta\IISM&G\Corporations.xml";
+#endif
+
                 var corporations = Serializer.Deserialize<List<Corporation>>(corppath);
 
                 if (clientDB != null)
@@ -505,7 +600,12 @@ namespace Project1.Controllers
 
                 Serializer.Serialize(clients, path);
 
+#if DEBUG
                 var auditLogspath = @"C:\POC\DeepXML\AuditLogs.xml";
+#else
+                var auditLogspath = @"D:\Data\Mankoo & Gupta\IISM&G\AuditLogs.xml";
+#endif
+
                 var auditLogs = Serializer.Deserialize<List<AuditLogs>>(auditLogspath);
 
                 if (auditLogs == null)
@@ -528,7 +628,11 @@ namespace Project1.Controllers
             try
             {
 
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Clients.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Clients.xml";
+#endif
                 var clients = Serializer.Deserialize<List<Clients>>(path);
 
                 if (categoryId == "all" && corporationId == "all")
@@ -568,7 +672,12 @@ namespace Project1.Controllers
                     clients = clients.Where(x => x.CorporationType == corporationId)?.ToList();
                 }
 
+#if DEBUG
                 var catpath = @"C:\POC\DeepXML\Categories.xml";
+#else
+                var catpath = @"D:\Data\Mankoo & Gupta\IISM&G\Categories.xml";
+#endif
+
                 var categories = Serializer.Deserialize<List<Categories>>(catpath);
 
                 foreach (var client in clients)
@@ -593,7 +702,11 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var auditLogspath = @"C:\POC\DeepXML\AuditLogs.xml";
+#else
+                var auditLogspath = @"D:\Data\Mankoo & Gupta\IISM&G\AuditLogs.xml";
+#endif
                 var auditLogs = Serializer.Deserialize<List<AuditLogs>>(auditLogspath);
                 return auditLogs;
             }
@@ -608,7 +721,11 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var auditLogspath = @"C:\POC\DeepXML\AuditLogs.xml";
+#else
+                var auditLogspath = @"D:\Data\Mankoo & Gupta\IISM&G\AuditLogs.xml";
+#endif
                 var auditLogs = Serializer.Deserialize<List<AuditLogs>>(auditLogspath);
 
                 var logs = auditLogs.Where(x => x.ClientId == clientId);
@@ -654,7 +771,11 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var clientPath = @"C:\POC\DeepXML\Clients.xml";
+#else
+                var clientPath = @"D:\Data\Mankoo & Gupta\IISM&G\Clients.xml";
+#endif
 
                 var clients = Serializer.Deserialize<List<Clients>>(clientPath);
 
@@ -675,7 +796,11 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Returns.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Returns.xml";
+#endif
 
                 var returns = Serializer.Deserialize<List<ReturnManagement>>(path);
 
@@ -687,8 +812,11 @@ namespace Project1.Controllers
                     ClientReturns = new List<ClientReturns>()
                 };
 
-
+#if DEBUG
                 var clientPath = @"C:\POC\DeepXML\Clients.xml";
+#else
+                var clientPath = @"D:\Data\Mankoo & Gupta\IISM&G\Clients.xml";
+#endif
 
                 var clients = Serializer.Deserialize<List<Clients>>(clientPath);
 
@@ -709,7 +837,11 @@ namespace Project1.Controllers
 
                 Serializer.Serialize(returns, path);
 
+#if DEBUG
                 var auditLogspath = @"C:\POC\DeepXML\AuditLogs.xml";
+#else
+                var auditLogspath = @"D:\Data\Mankoo & Gupta\IISM&G\AuditLogs.xml";
+#endif
                 var auditLogs = Serializer.Deserialize<List<AuditLogs>>(auditLogspath);
 
                 var auditLog = new AuditLogs
@@ -740,7 +872,12 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Returns.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Returns.xml";
+#endif
+
 
                 var returns = Serializer.Deserialize<List<ReturnManagement>>(path);
                 List<ReturnManagementVM> returnManagementVMList = new List<ReturnManagementVM>();
@@ -771,7 +908,12 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Returns.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Returns.xml";
+#endif
+
 
                 var returns = Serializer.Deserialize<List<ReturnManagement>>(path);
                 
@@ -807,7 +949,12 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Returns.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Returns.xml";
+#endif
+
 
                 var returns = Serializer.Deserialize<List<ReturnManagement>>(path);
 
@@ -832,7 +979,12 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Returns.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Returns.xml";
+#endif
+
 
                 var returns = Serializer.Deserialize<List<ReturnManagement>>(path);
 
@@ -843,7 +995,12 @@ namespace Project1.Controllers
 
                 if (returnByID != null)
                 {
+#if DEBUG
                     var catpath = @"C:\POC\DeepXML\Categories.xml";
+#else
+                var catpath = @"D:\Data\Mankoo & Gupta\IISM&G\Categories.xml";
+#endif
+
                     var categories = Serializer.Deserialize<List<Categories>>(catpath);
 
                     foreach (var client in returnByID.ClientReturns)
@@ -876,7 +1033,12 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Returns.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Returns.xml";
+#endif
+
 
                 var returns = Serializer.Deserialize<List<ReturnManagement>>(path);
 
@@ -909,7 +1071,12 @@ namespace Project1.Controllers
             try
             {
 
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Returns.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Returns.xml";
+#endif
+
 
                 var returns = Serializer.Deserialize<List<ReturnManagement>>(path);
                 var returnById = returns.FirstOrDefault(x => x.ReturnManagementId.ToString() == returnManagementId); 
@@ -938,7 +1105,12 @@ namespace Project1.Controllers
                 }
 
 
+#if DEBUG
                 var catpath = @"C:\POC\DeepXML\Categories.xml";
+#else
+                var catpath = @"D:\Data\Mankoo & Gupta\IISM&G\Categories.xml";
+#endif
+
                 var categories = Serializer.Deserialize<List<Categories>>(catpath);
 
                 foreach (var client in returnById.ClientReturns)
@@ -963,7 +1135,12 @@ namespace Project1.Controllers
         {
             try
             {
+#if DEBUG
                 var path = @"C:\POC\DeepXML\Returns.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Returns.xml";
+#endif
+
 
                 var returns = Serializer.Deserialize<List<ReturnManagement>>(path);
                 var returnById = returns.FirstOrDefault(x => x.ReturnManagementId.ToString() == returnManagementId);
@@ -980,6 +1157,14 @@ namespace Project1.Controllers
             {
                 throw ex;
             }
+        }
+
+
+
+        [HttpPost("send-email")]
+        public void SendEmail(SendEmail payload)
+        {
+            Serializer.SendEmail(payload);
         }
     }
 }
