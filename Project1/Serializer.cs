@@ -2,6 +2,7 @@
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using Project1.Models;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Common;
@@ -11,6 +12,7 @@ using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using static OfficeOpenXml.ExcelErrorValue;
@@ -255,12 +257,18 @@ public static class Serializer
 
         try
         {
-            List<List<string>> partitions = payload.Emails.partition(100);
+            List<string> validEmail = FilterValidEmails(payload.Emails);
+
+
+
+            List<List<string>> partitions = validEmail.Distinct().ToList().partition(100);
 
             foreach (List<string> partition in partitions)
             {
                 try
                 {
+
+
                     string smtpServer = "smtp.office365.com";
                     int smtpPort = 587;
                     string email = "info@mankooguptacpa.com";
@@ -303,7 +311,52 @@ public static class Serializer
         }
     }
 
+    private static List<string> FilterValidEmails(List<string> partition)
+    {
+        List<string> validEmails = new List<string>();
 
+        foreach (string email in partition)
+        {
+            try
+            {
+                if(email.Trim().Split(';').Length > 0)
+                {
+                    var splitEmail = email.Split(";");
+                    foreach(var splittedEMail in splitEmail)
+                    {
+                        var emailInvalid = splittedEMail.Replace(';', ' ').Trim();
+                        if (IsValidEmail(emailInvalid))
+                        {
+                            validEmails.Add(emailInvalid);
+                        }
+                    }
+                }
+                else
+                {
+                    var emailInvalid = email.Replace(';', ' ').Trim();
+                    if (IsValidEmail(emailInvalid))
+                    {
+                        validEmails.Add(emailInvalid);
+                    }
+                }
+
+               
+            }
+            catch(Exception ex)
+            {
+
+            }
+        }
+
+        return validEmails;
+    }
+
+    private static bool IsValidEmail(string email)
+    {
+        bool isEmail = Regex.IsMatch(email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase);
+
+        return isEmail;
+    }
 }
 
 public static class Extensions
