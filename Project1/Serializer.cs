@@ -258,17 +258,11 @@ public static class Serializer
         try
         {
             List<string> validEmail = FilterValidEmails(payload.Emails);
-
-
-
             List<List<string>> partitions = validEmail.Distinct().ToList().partition(100);
-
             foreach (List<string> partition in partitions)
             {
                 try
                 {
-
-
                     string smtpServer = "smtp.office365.com";
                     int smtpPort = 587;
                     string email = "info@mankooguptacpa.com";

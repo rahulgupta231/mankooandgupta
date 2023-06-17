@@ -16,7 +16,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 export class EmailFormComponent {
   form!: FormGroup;
   description!: string;
-  body: string = "Thanks & Regards, \nMankoo & Gupta Associates";
+  body: string = "Thanks & Regards, \nMankoo & Gupta CPA Professional Corp.";
 
   constructor(private fb: FormBuilder, public dialogRef: MatDialogRef<EmailFormComponent>) { }
 
