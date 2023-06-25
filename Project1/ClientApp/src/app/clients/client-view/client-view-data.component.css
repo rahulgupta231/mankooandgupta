@@ -111,44 +111,49 @@
 
 /* Column styles */
 /* ---------------------------------------------------------- */
-.type-column {
-  width: 15%;
-  padding-right: 3rem;
-  padding-top: 0px;
-  padding-bottom: 0px;
-}
-
-.name-column {
-  width: 30%;
-  padding-right: 3rem;
-  padding-top: 0px;
-  padding-bottom: 0px;
-}
-
-.amount-column {
-  width: 15%;
-  padding-right: 3rem;
-  padding-top: 0px;
-  padding-bottom: 0px;
-}
-
-.status-column {
-  width: 15%;
-  padding-right: 3rem;
-  padding-top: 0px;
-  padding-bottom: 0px;
-}
-
-.date-column {
-  width: 20%;
-  padding-right: 3rem;
-  padding-top: 0px;
-  padding-bottom: 0px;
-}
-
-.state-column {
+/*.serialNumber-column {
   width: 5%;
+  padding-right: 3rem;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}*/
+
+.mat-column-serialNumber {
+  flex: 0 0 7%;
 }
+
+.mat-column-clientName {
+  flex: 0 0 13%;
+}
+
+.mat-column-categoryName {
+  flex: 0 0 7%;
+}
+
+.mat-column-companyName {
+  flex: 0 0 13%;
+}
+
+.mat-column-email {
+  flex: 0 0 15%;
+}
+
+.mat-column-address {
+  flex: 0 0 15%;
+}
+
+.mat-column-phoneNumber {
+  flex: 0 0 10%;
+}
+
+.mat-column-business {
+  flex: 0 0 10%;
+}
+
+.mat-column-actions {
+  flex: 0 0 10%;
+}
+
 /* ---------------------------------------------------------- */
 
 /* Row styles */
