@@ -28,6 +28,8 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header> Actions </mat-header-cell>
         <mat-cell *matCellDef="let row">
           <a routerLink="../return-edit/{{row.returnManagementId}}" class="btn btn-sm btn-primary mr-1">Edit</a>
+          <button class="btn btn-sm btn-danger mr-1" style="margin-left:3px;" (click)="openDialog(row.returnManagementId)">Delete</button>
+
           <!--<a routerLink="../audit-view/{{row.clientId}}" class="btn btn-sm btn-primary mr-1" style="margin-left:5px;">Logs</a>-->
         </mat-cell>
       </ng-container>
