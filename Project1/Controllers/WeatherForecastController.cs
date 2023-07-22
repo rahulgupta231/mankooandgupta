@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Project1.Helper;
 using Project1.Models;
 using System.Collections.Generic;
@@ -390,6 +390,30 @@ namespace Project1.Controllers
             }
         }
 
+        [HttpGet("incorporation-month")]
+        public IEnumerable<string> GetIncorporationMonths()
+        {
+            try
+            {
+                //List<Clients>  test = Serializer.getExcelFile();
+
+#if DEBUG
+                var path = @"C:\POC\DeepXML\Clients.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Clients.xml";
+#endif
+
+
+                var clients = Serializer.Deserialize<List<Clients>>(path);
+
+                return clients.Select(x=>x.IncorporationMonth).ToList().Distinct();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         [HttpGet("clients/{id}")]
         public Clients GetClients(Guid id)
         {
@@ -623,7 +647,7 @@ namespace Project1.Controllers
 
 
         [HttpGet("clients-by-category")]
-        public IEnumerable<Clients> GetClientsByCategoryId(string categoryId, string corporationId)
+        public IEnumerable<Clients> GetClientsByCategoryId(string categoryId, string corporationId, string incorporationMonth)
         {
             try
             {
@@ -635,8 +659,24 @@ namespace Project1.Controllers
 #endif
                 var clients = Serializer.Deserialize<List<Clients>>(path);
 
-                if (categoryId == "all" && corporationId == "all")
+                if (categoryId == "all" && corporationId == "all" && incorporationMonth == "all")
                 {
+#if DEBUG
+                    var catpath1 = @"C:\POC\DeepXML\Categories.xml";
+#else
+                var catpath1 = @"D:\Data\Mankoo & Gupta\IISM&G\Categories.xml";
+#endif
+
+                    var categories1 = Serializer.Deserialize<List<Categories>>(catpath1);
+
+                    foreach (var client in clients)
+                    {
+                        if (!string.IsNullOrWhiteSpace(client.CategoryName))
+                        {
+                            var cat = categories1.FirstOrDefault(x => x.CategoryId.ToString() == client.CategoryName);
+                            client.CategoryName = cat.Name;
+                        }
+                    }
                     return clients;
                 }
 
@@ -670,6 +710,11 @@ namespace Project1.Controllers
                     //}
 
                     clients = clients.Where(x => x.CorporationType == corporationId)?.ToList();
+                }
+
+                if (incorporationMonth != "all")
+                {
+                    clients = clients.Where(x => x.IncorporationMonth == incorporationMonth)?.ToList();
                 }
 
 #if DEBUG
@@ -996,6 +1041,35 @@ namespace Project1.Controllers
                 if (returnByID != null)
                 {
 #if DEBUG
+                    var clientPath = @"C:\POC\DeepXML\Clients.xml";
+#else
+                var clientPath = @"D:\Data\Mankoo & Gupta\IISM&G\Clients.xml";
+#endif
+
+                    var clients = Serializer.Deserialize<List<Clients>>(clientPath);
+
+                    var returnClients = returnByID.ClientReturns.Select(x => x.Client).ToList();
+
+                    var result = clients.Where(p => !returnClients.Any(l => p.ClientId == l.ClientId))?.ToList();
+
+                    foreach(var client in result)
+                    {
+                        returnByID.ClientReturns.Add(new ClientReturns
+                        {
+                            Client = client,
+                            Filed = "false"
+                        });
+                    }
+
+                    Serializer.Serialize(returns, path);
+
+                    foreach (var client in returnByID.ClientReturns)
+                    {
+                        var clientDetail = clients.FirstOrDefault(x => x.ClientId.ToString() == client.Client.ClientId.ToString());
+                        client.Client = clientDetail;
+                    }
+
+#if DEBUG
                     var catpath = @"C:\POC\DeepXML\Categories.xml";
 #else
                 var catpath = @"D:\Data\Mankoo & Gupta\IISM&G\Categories.xml";
@@ -1012,6 +1086,9 @@ namespace Project1.Controllers
                         }
                     }
 
+                    //filter client status from returnById.ClientReturns
+                    var clientStatus = returnByID.ClientReturns.Where(x => x.Client.Status == "active")?.ToList();
+                    returnByID.ClientReturns = clientStatus;
                     return returnByID;
                 }
 
@@ -1165,6 +1242,75 @@ namespace Project1.Controllers
         public void SendEmail(SendEmail payload)
         {
             Serializer.SendEmail(payload);
+        }
+
+        [HttpGet("delete-return/{returnManagementId}")]
+        public IEnumerable<ReturnManagementVM> DeleteReturn(string returnManagementId)
+        {
+            try
+            {
+#if DEBUG
+                var path = @"C:\POC\DeepXML\Returns.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Returns.xml";
+#endif
+
+
+                var returns = Serializer.Deserialize<List<ReturnManagement>>(path);
+                List<ReturnManagementVM> returnManagementVMList = new List<ReturnManagementVM>();
+
+                var returnById = returns.FirstOrDefault(x => x.ReturnManagementId.ToString() == returnManagementId);
+
+                //delete return from returns
+                if(returnById != null)
+                {
+                    returns.Remove(returnById);
+                    Serializer.Serialize(returns, path);
+                }
+
+
+                foreach (var item in returns)
+                {
+                    returnManagementVMList.Add(new ReturnManagementVM
+                    {
+                        ReturnManagementName = item.ReturnManagementName,
+                        HSTPeriod = string.Join(',', item.HSTPeriod),
+                        ReturnManagementId = item.ReturnManagementId.ToString()
+                    });
+
+                }
+
+                return returnManagementVMList;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+                return null;
+            }
+        }
+
+
+        [HttpGet("generate-excel-client")]
+        public bool GenerateExcelClient()
+        {
+            try
+            {
+#if DEBUG
+                var clientPath = @"C:\POC\DeepXML\Clients.xml";
+#else
+                var clientPath = @"D:\Data\Mankoo & Gupta\IISM&G\Clients.xml";
+#endif
+
+                var clients = Serializer.Deserialize<List<Clients>>(clientPath);
+
+                return Serializer.generateExcelFileClient(clients);
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

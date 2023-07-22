@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from "@angular/cdk/collections";
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { EmailFormComponent } from '../email-form/email-form.component';
+import { ReturnFilterService } from '../../services/return-filter.service';
 
 @Component({
   selector: 'app-fetch-data',
@@ -19,16 +20,18 @@ export class ReturnDetailDataComponent {
   public categories: Categories[] = [];
   hstPeriodDrownDown: string[] = [];
 
-  dataSource!: MatTableDataSource<ClientReturns>;
+  dataSource: MatTableDataSource<ClientReturns> = new MatTableDataSource<ClientReturns>();
 
-  displayedColumns = ['select','serialNumber', 'clientName', 'categoryName', 'companyName', 'email', 'address', 'phoneNumber', 'business', 'filed'];
+  displayedColumns = ['select','serialNumber', 'clientName', 'categoryName', 'companyName', 'email', 'address', 'phoneNumber', 'business', 'filed', 'actions'];
 
 
-  selectedCategoryId: string = "all";
-  selectedHstPeriod: string = "all";
-  selectedFiledStatus: string = "false";
+  selectedCategoryId: any;
+  selectedHstPeriod: any;
+  selectedFiledStatus: any;
 
   selection = new SelectionModel<ClientReturns>(true, []);
+  inputFilter: any;
+
 
 
   constructor(
@@ -36,12 +39,21 @@ export class ReturnDetailDataComponent {
     private dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
-    @Inject('BASE_URL') baseUrl: string
+    @Inject('BASE_URL') baseUrl: string,
+    private returnFilterService: ReturnFilterService
   ) {
     this.baseUrl = baseUrl;
+    
+   
   }
 
   ngOnInit() {
+
+    this.selectedCategoryId = this.returnFilterService.getSelectedCategoryId();
+    this.selectedHstPeriod = this.returnFilterService.getSelectedHstPeriod();
+    this.selectedFiledStatus = this.returnFilterService.getSelectedFiledStatus();
+    this.inputFilter = this.returnFilterService.getSelectedInputFilterh();
+
     this.id = this.route.snapshot.params['id'];
     this.http.get<Categories[]>(this.baseUrl + 'weatherforecast/categories').subscribe(result => {
       this.categories = result;
@@ -54,22 +66,25 @@ export class ReturnDetailDataComponent {
     }, error => console.error(error));
     
   }
-    getReleaseManagement() {
-      this.http.get<ReturnManagement>(this.baseUrl + `weatherforecast/return-detail/${this.id}`)
-        .subscribe(result => {
-          this.returnManagement = result;
+  getReleaseManagement() {
+
+    this.filter();
+      //this.http.get<ReturnManagement>(this.baseUrl + `weatherforecast/return-detail/${this.id}`)
+      //  .subscribe(result => {
+      //    this.returnManagement = result;
 
           
 
 
-          this.returnManagement.clientReturns = this.returnManagement.clientReturns.filter(function (el) {
-            return el.filed == "false"
-          })
+      //    this.returnManagement.clientReturns = this.returnManagement.clientReturns.filter(function (el) {
+      //      return el.filed == "false"
+      //    })
 
-          this.dataSource = new MatTableDataSource(this.returnManagement.clientReturns);
-          console.log(this.id)
-          console.log(result)
-        }, error => console.error(error));
+      //    this.dataSource = new MatTableDataSource(this.returnManagement.clientReturns);
+      //    console.log(this.id)
+      //    console.log(result)
+      //    this.filter();
+      //  }, error => console.error(error));
     }
 
   onFiledChange(clientId: string, event: any) {
@@ -83,6 +98,8 @@ export class ReturnDetailDataComponent {
 
   filterFiledStatus(event: any) {
     this.selectedFiledStatus = event.target.value;
+    this.returnFilterService.setSelectedFiledStatus(this.selectedFiledStatus);
+
     this.filter();
 
 
@@ -114,18 +131,22 @@ export class ReturnDetailDataComponent {
 
   filterCategoryChange(event: any) {
     this.selectedCategoryId = event.target.value;
+    this.returnFilterService.setSelectedCategoryId(this.selectedCategoryId);
+
     this.filter();
     console.log(this.selectedCategoryId)
   }
 
   filterHstPeriod(event: any) {
     this.selectedHstPeriod = event.target.value;
+    this.returnFilterService.setSelectedHstPeriod(this.selectedHstPeriod);
+
     this.filter();
     console.log(this.selectedHstPeriod)
   }
 
   filter() {
-    this.http.get<ReturnManagement>(this.baseUrl + 'weatherforecast/return-fitler/' + this.id + '?categoryName=' + this.selectedCategoryId + '&hstPeriod=' + this.selectedHstPeriod + '&filedStatus=' + this.selectedFiledStatus).subscribe(result => {
+    this.http.get<ReturnManagement>(this.baseUrl + 'weatherforecast/return-fitler/' + this.id + '?categoryName=' + this.returnFilterService.getSelectedCategoryId() + '&hstPeriod=' + this.returnFilterService.getSelectedHstPeriod() + '&filedStatus=' + this.returnFilterService.getSelectedFiledStatus()).subscribe(result => {
       this.returnManagement = result;
 
       
@@ -141,10 +162,24 @@ export class ReturnDetailDataComponent {
           return el.filed == "true"
         })
       }
+      else if (this.selectedFiledStatus == "rtf") {
+        this.returnManagement.clientReturns = this.returnManagement.clientReturns.filter(function (el) {
+          return el.filed == "rtf"
+        })
+      }
+      else if (this.selectedFiledStatus == "drop") {
+        this.returnManagement.clientReturns = this.returnManagement.clientReturns.filter(function (el) {
+          return el.filed == "drop"
+        })
+      }
 
 
       this.dataSource = new MatTableDataSource(this.returnManagement.clientReturns);
-     
+      this.dataSource.filterPredicate = (data: ClientReturns, filter: string) => {
+        return data.client.clientName.trim().toLowerCase().includes(filter);
+      }
+
+      this.dataSource.filter = this.returnFilterService.getSelectedInputFilterh();
       console.log(this.returnManagement)
     }, error => console.error(error));
   }
@@ -212,6 +247,25 @@ export class ReturnDetailDataComponent {
           
         }, error => { });
     });    
+  }
+
+  applyFilter(filterValue: any) {
+    let filterValue1 = filterValue.target.value.trim(); // Remove whitespace
+    filterValue1 = filterValue.target.value.toLowerCase(); // Datasource defaults to lowercase matches
+    this.dataSource.filter = filterValue1;
+    this.returnFilterService.setSelectedInputFilterh(filterValue1)
+    console.log(this.dataSource)
+
+  }
+
+  resetFilter() {
+    this.returnFilterService.resetFilter();
+    this.filter();
+
+    this.selectedCategoryId = this.returnFilterService.getSelectedCategoryId();
+    this.selectedHstPeriod = this.returnFilterService.getSelectedHstPeriod();
+    this.selectedFiledStatus = this.returnFilterService.getSelectedFiledStatus();
+    this.inputFilter = this.returnFilterService.getSelectedInputFilterh();
   }
 }
 

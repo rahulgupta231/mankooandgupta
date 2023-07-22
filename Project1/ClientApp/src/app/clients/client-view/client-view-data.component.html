@@ -43,7 +43,8 @@
   <mat-form-field style="width: 200px;">
     <mat-label> Filter Categories </mat-label>
     <select matNativeControl name="categories"
-            (change)="filterCategoryChange($event)">
+            (change)="filterCategoryChange($event)"
+            [(ngModel)]="categoryId">
       <option value="all"> All </option>
       <option *ngFor="let filter of categories" [value]="filter.categoryId">{{filter.name}}</option>
     </select>
@@ -52,7 +53,8 @@
   <mat-form-field style="width: 200px;margin-left:10px;">
     <mat-label> Filter Corporations </mat-label>
     <select matNativeControl name="corporations"
-            (change)="filterCorporationChange($event)">
+            (change)="filterCorporationChange($event)"
+            [(ngModel)]="corporationId">
       <option value="all"> All </option>
       <option *ngFor="let filter of corporations" [value]="filter.corporationId">{{filter.name}}</option>
     </select>
@@ -61,12 +63,29 @@
   <mat-form-field style="width: 200px;margin-left:10px;">
     <mat-label> Filter Client Status </mat-label>
     <select matNativeControl name="clientStatus"
-            (change)="filterClientStatus($event)">
+            (change)="filterClientStatus($event)"
+            [(ngModel)]="selectedClientStatus">
       <option value="all"> All </option>
       <option value="true"> Active </option>
       <option value="false"> Inactive </option>
     </select>
   </mat-form-field>
+
+  <mat-form-field style="width: 200px;margin-left:10px;">
+    <mat-label> Filter Incorporation Month </mat-label>
+    <select matNativeControl name="incorporationMonth"
+            (change)="filterInCorporationMonthChange($event)"
+            [(ngModel)]="selectedIncorporationMonth">
+      <option value="all"> All </option>
+      <option *ngFor="let filter of incorporationMonths" [value]="filter">{{filter}}</option>
+    </select>
+  </mat-form-field>
+
+  <a (click)="resetFilter()" style="margin-left: 15px" class="btn btn-sm btn-primary mr-1">Reset Filters</a>
+
+
+  <a (click)="generateExcel()" style="margin-left: 15px" class="btn btn-sm btn-primary mr-1">Export To Excel</a>
+
 </div>
 
 <div class="mat-app-background basic-container">
@@ -75,7 +94,7 @@
 
   <div class="example-header">
     <mat-form-field>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Filter">
+      <input matInput (keyup)="applyFilter($event)" placeholder="Filter" [(ngModel)]="inputFilter">
     </mat-form-field>
   </div>
 

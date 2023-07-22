@@ -111,43 +111,49 @@
 
 /* Column styles */
 /* ---------------------------------------------------------- */
-.type-column {
-  width: 15%;
-  padding-right: 3rem;
-  padding-top: 0px;
-  padding-bottom: 0px;
+
+.mat-column-select {
+  flex: 0 0 5%;
 }
 
-.name-column {
-  width: 30%;
-  padding-right: 3rem;
-  padding-top: 0px;
-  padding-bottom: 0px;
+.mat-column-serialNumber {
+  flex: 0 0 5%;
 }
 
-.amount-column {
-  width: 15%;
-  padding-right: 3rem;
-  padding-top: 0px;
-  padding-bottom: 0px;
+.mat-column-clientName {
+  flex: 0 0 10%;
 }
 
-.status-column {
-  width: 15%;
-  padding-right: 3rem;
-  padding-top: 0px;
-  padding-bottom: 0px;
+.mat-column-categoryName {
+  flex: 0 0 5%;
 }
 
-.date-column {
-  width: 20%;
-  padding-right: 3rem;
-  padding-top: 0px;
-  padding-bottom: 0px;
+.mat-column-companyName {
+  flex: 0 0 15%;
 }
 
-.state-column {
-  width: 5%;
+.mat-column-email {
+  flex: 0 0 15%;
+}
+
+.mat-column-address {
+  flex: 0 0 10%;
+}
+
+.mat-column-phoneNumber {
+  flex: 0 0 10%;
+}
+
+.mat-column-business {
+  flex: 0 0 10%;
+}
+
+.mat-column-filed {
+  flex: 0 0 10%;
+}
+
+.mat-column-actions {
+  flex: 0 0 5%;
 }
 /* ---------------------------------------------------------- */
 

@@ -33,7 +33,9 @@ import { ReturnAddDataComponent } from './returns/return-add/return-add-data.com
 import { ReturnDetailDataComponent } from './returns/return-detail/return-detail-data.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { EmailFormComponent } from './returns/email-form/email-form.component';
+import { ConfirmationDialog } from './confirmation-dialog/confirmation-dialog.component';
 
 const modules = [
   MatFormFieldModule,
@@ -46,7 +48,8 @@ const modules = [
   MatTooltipModule,
   MatInputModule,
   MatCheckboxModule,
-  MatDialogModule
+  MatDialogModule,
+  MatSnackBarModule
 ];
 
 @NgModule({
@@ -67,7 +70,8 @@ const modules = [
     ReturnViewComponent,
     ReturnAddDataComponent,
     ReturnDetailDataComponent,
-    EmailFormComponent
+    EmailFormComponent,
+    ConfirmationDialog
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),

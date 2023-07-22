@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatFormField } from '@angular/material/form-field';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ClientFilterService } from '../../services/client-filter.service';
 
 @Component({
   selector: 'app-fetch-data',
@@ -18,28 +19,37 @@ export class ClientViewComponent {
   dataSource!: MatTableDataSource<Clients>;
   public categories: Categories[] = [];
   public corporations: Corporations[] = [];
+  public incorporationMonths: any[] = [];
 
 
   @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   @ViewChild(MatSort) sort: MatSort = new MatSort();
 
   baseUrl!: string;
-  selectedCategoryId: string = "all";
-  selectedCorporationId: string = "all";
+  categoryId: any;
+  corporationId: any;
+  selectedClientStatus: any;
+  selectedIncorporationMonth: any;
+  inputFilter: any;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
-    @Inject('BASE_URL') baseUrl: string
+    @Inject('BASE_URL') baseUrl: string,
+    private clientFilterService: ClientFilterService
   ) {
     this.baseUrl = baseUrl;
   }
   ngOnInit() {
     this.getClients()
+    this.categoryId = this.clientFilterService.getSelectedCategoryId();
+    this.corporationId = this.clientFilterService.getSelectedCorporationId();
+    this.selectedClientStatus = this.clientFilterService.getSelectedClientStatus();
+    this.selectedIncorporationMonth = this.clientFilterService.getSelectedIncorporationMonth();
+    this.inputFilter = this.clientFilterService.getSelectedInputFilterh(); 
 
-   
-
+    
     this.http.get<Categories[]>(this.baseUrl + 'weatherforecast/categories').subscribe(result => {
       this.categories = result;
     }, error => console.error(error));
@@ -47,53 +57,90 @@ export class ClientViewComponent {
     this.http.get<Corporations[]>(this.baseUrl + 'weatherforecast/corporations').subscribe(result => {
       this.corporations = result;
     }, error => console.error(error));
+
+    this.http.get<Corporations[]>(this.baseUrl + 'weatherforecast/incorporation-month').subscribe(result => {
+      this.incorporationMonths = result;
+    }, error => console.error(error));
   }
     getClients() {
       this.http.get<Clients[]>(this.baseUrl + 'weatherforecast/clients').subscribe(result => {
         this.clients = result;
         this.dataSource = new MatTableDataSource(result);
+
         console.log(this.clients);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+
+        console.log("called")
+       
+        console.log(this.dataSource)
+
+        this.filter();
+
+        
+
       }, error => console.error(error));
-    }
+  }
+
+  resetFilter() {
+    this.clientFilterService.resetFilter();
+    this.categoryId = this.clientFilterService.getSelectedCategoryId();
+    this.corporationId = this.clientFilterService.getSelectedCorporationId();
+    this.selectedClientStatus = this.clientFilterService.getSelectedClientStatus();
+    this.selectedIncorporationMonth = this.clientFilterService.getSelectedIncorporationMonth(); 
+    this.filter();
+  }
 
   ngAfterViewInit() {
    
   }
 
-  applyFilter(filterValue: any) {
-    console.log(filterValue)
+  generateExcel() {
+    this.http.get<boolean>(this.baseUrl + 'weatherforecast/generate-excel-client').subscribe(result => {
+      alert('Excel Exported to folder !')
+      console.log(result)
+    }, error => console.error(error));
+  }
 
+  applyFilter(filterValue: any) {
     let filterValue1 = filterValue.target.value.trim(); // Remove whitespace
     filterValue1 = filterValue.target.value.toLowerCase(); // Datasource defaults to lowercase matches
     this.dataSource.filter = filterValue1;
+    this.clientFilterService.setSelectedInputFilterh(filterValue1);
   }
 
   filterCategoryChange(event: any) {
-    this.selectedCategoryId = event.target.value;
+    this.clientFilterService.setSelectedCategoryId(event.target.value);
     this.filter();
     
   }
-    filter() {
-      this.http.get<Clients[]>(this.baseUrl + 'weatherforecast/clients-by-category?categoryId=' + this.selectedCategoryId + '&corporationId=' + this.selectedCorporationId).subscribe(result => {
+  filter() {
+    this.http.get<Clients[]>(this.baseUrl + 'weatherforecast/clients-by-category?categoryId=' + this.clientFilterService.getSelectedCategoryId() + '&corporationId=' + this.clientFilterService.getSelectedCorporationId() + '&incorporationMonth=' + this.clientFilterService.getSelectedIncorporationMonth()).subscribe(result => {
         this.clients = result;
         this.dataSource = new MatTableDataSource(result);
 
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         console.log("Rahul Testing");
-        console.log(this.clients);
+      console.log(this.clients);
+      this.dataSource.filter = this.clientFilterService.getSelectedInputFilterh();
       }, error => console.error(error));
     }
 
   filterCorporationChange(event: any) {
-    this.selectedCorporationId = event.target.value;
+    this.clientFilterService.setSelectedCorporateId(event.target.value);
+    this.filter();
+  }
+
+  filterInCorporationMonthChange(event: any) {
+    this.clientFilterService.setSelectedIncorporationMonth(event.target.value);
     this.filter();
   }
 
   filterClientStatus(event: any) {
     console.log(event.target.value)
+
+    this.clientFilterService.setSelectedClientStatus(event.target.value);
 
     if (event.target.value == "all") {
       this.dataSource = new MatTableDataSource(this.clients);

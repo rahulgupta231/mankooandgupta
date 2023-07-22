@@ -5,6 +5,10 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatFormField } from '@angular/material/form-field';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmationDialog } from '../../confirmation-dialog/confirmation-dialog.component';
+import { ReturnFilterService } from '../../services/return-filter.service';
 
 @Component({
   selector: 'app-fetch-data',
@@ -29,12 +33,15 @@ export class ReturnViewComponent {
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
-    @Inject('BASE_URL') baseUrl: string
-  ) {
+    @Inject('BASE_URL') baseUrl: string,
+    private dialog: MatDialog,
+    private returnFilterService: ReturnFilterService) {
     this.baseUrl = baseUrl;
   }
   ngOnInit() {
-    this.getReturns()
+    this.getReturns();
+    this.returnFilterService.resetFilter();
+
     
   }
   getReturns() {
@@ -47,7 +54,42 @@ export class ReturnViewComponent {
       }, error => console.error(error));
     }
 
+     deleteConfirmed(evt: any) {
+    alert("Deleted!");
+  }
 
+  openDialog(returnManagementId: string) {
+    const dialogRef = this.dialog.open(ConfirmationDialog, {
+      data: {
+        message: 'Are you sure want to delete?',
+        buttonText: {
+          ok: 'Yes',
+          cancel: 'No'
+        }
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      console.log("Rahul calling confirm dialog box")
+      console.log(confirmed)
+      console.log(returnManagementId)
+      if (confirmed) {
+
+        this.http.get<returnManagementVM[]>(this.baseUrl + 'weatherforecast/delete-return/' + returnManagementId).subscribe(result => {
+          this.returnManagementVMList = result;
+          this.dataSource = new MatTableDataSource(result);
+          console.log(this.returnManagementVMList);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        }, error => console.error(error));
+
+        const a = document.createElement('a');
+        a.click();
+        a.remove();
+       
+      }
+    });
+  }
 
 }
 

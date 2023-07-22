@@ -8,17 +8,22 @@
   <mat-form-field style="width: 200px;margin-left:10px;">
     <mat-label> Filter Filed Status </mat-label>
     <select matNativeControl name="clientStatus"
-            (change)="filterFiledStatus($event)">
+            (change)="filterFiledStatus($event)"
+            [(ngModel)]="selectedFiledStatus">
       <option value="all"> All </option>
       <option value="true"> Yes </option>
       <option value="false" selected> No </option>
+      <option value="rtf">Ready To File</option>
+      <option value="drop">Dropped</option>
+
     </select>
   </mat-form-field>
 
   <mat-form-field style="width: 200px; margin-left: 10px;">
     <mat-label> Filter Categories </mat-label>
     <select matNativeControl name="categories"
-            (change)="filterCategoryChange($event)">
+            (change)="filterCategoryChange($event)"
+            [(ngModel)]="selectedCategoryId">
       <option value="all"> All </option>
       <option *ngFor="let filter of categories" [value]="filter.categoryId">{{filter.name}}</option>
     </select>
@@ -27,14 +32,24 @@
   <mat-form-field style="width: 200px; margin-left: 10px;">
     <mat-label> Filter HST Period </mat-label>
     <select matNativeControl name="categories"
-            (change)="filterHstPeriod($event)">
+            (change)="filterHstPeriod($event)"
+            [(ngModel)]="selectedHstPeriod">
       <option value="all"> All </option>
       <option *ngFor="let c of hstPeriodDrownDown" [value]="c">{{c}}      </option>
     </select>
   </mat-form-field>
+
+  <a (click)="resetFilter()" style="margin-left: 15px" class="btn btn-sm btn-primary mr-1">Reset Filters</a>
+
   <a (click)="generateExcel()" style="margin-left: 15px" class="btn btn-sm btn-primary mr-1">Export To Excel</a>
 
   <a *ngIf="selection.selected.length > 0" (click)="sendEmail()" style="margin-left: 15px" class="btn btn-sm btn-primary mr-1">Send Email</a>
+</div>
+
+<div class="example-header">
+  <mat-form-field>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Filter Client Name" [(ngModel)]="inputFilter">
+  </mat-form-field>
 </div>
 
 <div>
@@ -119,7 +134,17 @@
         <select class="form-control" id="filed" [(ngModel)]="row.filed" (change)="onFiledChange(row.client.clientId, $event)">
           <option value="false">No</option>
           <option value="true">Yes</option>
+          <option value="rtf">Ready To File</option>
+          <option value="drop">Dropped</option>
         </select>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Business Column -->
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Actions </mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <a routerLink="../../client-detail/{{row.client.clientId}}" class="btn btn-sm btn-primary mr-1" style="margin-left:5px;">View</a>
       </mat-cell>
     </ng-container>
 
