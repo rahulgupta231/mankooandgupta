@@ -506,7 +506,7 @@ namespace Project1.Controllers
                     Business = client.Business,
                     CompanyKey = client.CompanyKey,
                     CompanyName = client.CompanyName,
-                    CorporationKey = client.CompanyKey,
+                    CorporationKey = client.CorporationKey,
                     CRAPassword = client.CRAPassword,
                     CRAUserId = client.CRAUserId,
                     Email = client.Email,
@@ -620,6 +620,7 @@ namespace Project1.Controllers
                     clientDB.CRAPassword = client.CRAPassword;
                     clientDB.Notes = client.Notes;
                     clientDB.AdditionalNotes = client.AdditionalNotes;
+                    clientDB.SerialNumber = client.SerialNumber;
                 }
 
                 Serializer.Serialize(clients, path);
