@@ -382,7 +382,7 @@ namespace Project1.Controllers
                     }
                 }
 
-                return clients;
+                return clients?.OrderBy(x => x.SerialNumber, new DecimalComparer()).ToList().Where(x => x.Status.ToLower().Equals("active")).ToList();
             }
             catch (Exception ex)
             {
@@ -406,7 +406,7 @@ namespace Project1.Controllers
 
                 var clients = Serializer.Deserialize<List<Clients>>(path);
 
-                return clients.Select(x=>x.IncorporationMonth).ToList().Distinct();
+                return clients.Select(x => x.IncorporationMonth).ToList().Distinct();
             }
             catch (Exception ex)
             {
@@ -678,7 +678,7 @@ namespace Project1.Controllers
                             client.CategoryName = cat.Name;
                         }
                     }
-                    return clients;
+                    return clients?.OrderBy(x => x.SerialNumber, new DecimalComparer()).ToList().Where(x => x.Status.ToLower().Equals("active")).ToList();
                 }
 
                 if (categoryId != "all")
@@ -735,7 +735,7 @@ namespace Project1.Controllers
                     }
                 }
 
-                return clients;
+                return clients?.OrderBy(x => x.SerialNumber, new DecimalComparer()).ToList().Where(x => x.Status.ToLower().Equals("active")).ToList();
             }
             catch (Exception ex)
             {
@@ -867,7 +867,7 @@ namespace Project1.Controllers
                 var clients = Serializer.Deserialize<List<Clients>>(clientPath);
 
 
-                var clientByHstPeriod = clients.Where(x => x.Status.ToLower() =="active").ToList();
+                var clientByHstPeriod = clients.Where(x => x.Status.ToLower() == "active").ToList();
 
 
                 foreach (var client in clientByHstPeriod)
@@ -962,9 +962,9 @@ namespace Project1.Controllers
 
 
                 var returns = Serializer.Deserialize<List<ReturnManagement>>(path);
-                
 
-                var returnByID = returns.FirstOrDefault(x => x.ReturnManagementId .ToString() == id.ToString());
+
+                var returnByID = returns.FirstOrDefault(x => x.ReturnManagementId.ToString() == id.ToString());
 
                 if (returnByID != null)
                 {
@@ -977,9 +977,9 @@ namespace Project1.Controllers
 
                     return returnManagementVM;
                 }
-                    
 
-               
+
+
 
                 return new ReturnManagementVM();
             }
@@ -1053,7 +1053,7 @@ namespace Project1.Controllers
 
                     var result = clients.Where(p => !returnClients.Any(l => p.ClientId == l.ClientId))?.ToList();
 
-                    foreach(var client in result)
+                    foreach (var client in result)
                     {
                         returnByID.ClientReturns.Add(new ClientReturns
                         {
@@ -1157,17 +1157,18 @@ namespace Project1.Controllers
 
 
                 var returns = Serializer.Deserialize<List<ReturnManagement>>(path);
-                var returnById = returns.FirstOrDefault(x => x.ReturnManagementId.ToString() == returnManagementId); 
+                var returnById = returns.FirstOrDefault(x => x.ReturnManagementId.ToString() == returnManagementId);
 
-                if (returnById!= null && categoryName == "all" && hstPeriod == "all" && filedStatus == "all")
+                if (returnById != null && categoryName == "all" && hstPeriod == "all" && filedStatus == "all")
                 {
-                    return returnById;                }
+                    return returnById;
+                }
 
-                
+
 
                 if (categoryName != "all")
                 {
-                    returnById.ClientReturns = returnById.ClientReturns.Where(x=>x.Client.CategoryName == categoryName).ToList();
+                    returnById.ClientReturns = returnById.ClientReturns.Where(x => x.Client.CategoryName == categoryName).ToList();
                 }
 
 
@@ -1177,7 +1178,7 @@ namespace Project1.Controllers
                     returnById.ClientReturns = returnById.ClientReturns.Where(x => x.Client.HSTPeriod == hstPeriod).ToList();
                 }
 
-                if(filedStatus != "all")
+                if (filedStatus != "all")
                 {
                     returnById.ClientReturns = returnById.ClientReturns.Where(x => x.Filed == filedStatus).ToList();
                 }
@@ -1263,7 +1264,7 @@ namespace Project1.Controllers
                 var returnById = returns.FirstOrDefault(x => x.ReturnManagementId.ToString() == returnManagementId);
 
                 //delete return from returns
-                if(returnById != null)
+                if (returnById != null)
                 {
                     returns.Remove(returnById);
                     Serializer.Serialize(returns, path);
@@ -1304,6 +1305,43 @@ namespace Project1.Controllers
 
                 var clients = Serializer.Deserialize<List<Clients>>(clientPath);
 
+#if DEBUG
+                var catpath = @"C:\POC\DeepXML\Categories.xml";
+#else
+                var catpath = @"D:\Data\Mankoo & Gupta\IISM&G\Categories.xml";
+#endif
+
+                var categories = Serializer.Deserialize<List<Categories>>(catpath);
+
+#if DEBUG
+                var corppath = @"C:\POC\DeepXML\Corporations.xml";
+#else
+                var corppath = @"D:\Data\Mankoo & Gupta\IISM&G\Corporations.xml";
+#endif
+
+                var corporations = Serializer.Deserialize<List<Corporation>>(corppath);
+
+
+
+
+
+
+                foreach (var client in clients)
+                {
+                    if (!string.IsNullOrWhiteSpace(client.CategoryName))
+                    {
+                        var cat = categories.FirstOrDefault(x => x.CategoryId.ToString() == client.CategoryName);
+                        client.CategoryName = cat.Name;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(client.CorporationType))
+                    {
+                        var cat = corporations.FirstOrDefault(x => x.CorporationId.ToString() == client.CorporationType);
+                        client.CorporationType = cat.Name;
+                    }
+
+                }
+
                 return Serializer.generateExcelFileClient(clients);
 
 
@@ -1311,6 +1349,40 @@ namespace Project1.Controllers
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+    }
+
+    public class DecimalComparer : IComparer<string>
+    {
+        public int Compare(string s1, string s2)
+        {
+            if (IsDecimal(s1) && IsDecimal(s2))
+            {
+                if (Convert.ToDecimal(s1) > Convert.ToDecimal(s2)) return 1;
+                if (Convert.ToDecimal(s1) < Convert.ToDecimal(s2)) return -1;
+                if (Convert.ToDecimal(s1) == Convert.ToDecimal(s2)) return 0;
+            }
+
+            if (IsDecimal(s1) && !IsDecimal(s2))
+                return -1;
+
+            if (!IsDecimal(s1) && IsDecimal(s2))
+                return 1;
+
+            return string.Compare(s1, s2, true);
+        }
+
+        public static bool IsDecimal(object value)
+        {
+            try
+            {
+                var i = Convert.ToDecimal(value.ToString());
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
             }
         }
     }
