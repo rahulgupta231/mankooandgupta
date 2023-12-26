@@ -115,7 +115,7 @@ export class ClientViewComponent {
     
   }
   filter() {
-    this.http.get<Clients[]>(this.baseUrl + 'weatherforecast/clients-by-category?categoryId=' + this.clientFilterService.getSelectedCategoryId() + '&corporationId=' + this.clientFilterService.getSelectedCorporationId() + '&incorporationMonth=' + this.clientFilterService.getSelectedIncorporationMonth()).subscribe(result => {
+    this.http.get<Clients[]>(this.baseUrl + 'weatherforecast/clients-by-category?categoryId=' + this.clientFilterService.getSelectedCategoryId() + '&corporationId=' + this.clientFilterService.getSelectedCorporationId() + '&incorporationMonth=' + this.clientFilterService.getSelectedIncorporationMonth() + '&clientStatus=' + this.clientFilterService.getSelectedClientStatus()).subscribe(result => {
         this.clients = result;
         this.dataSource = new MatTableDataSource(result);
 
@@ -141,30 +141,31 @@ export class ClientViewComponent {
     console.log(event.target.value)
 
     this.clientFilterService.setSelectedClientStatus(event.target.value);
+    this.filter();
 
-    if (event.target.value == "all") {
-      this.dataSource = new MatTableDataSource(this.clients);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    }
-    else if (event.target.value == "true") {
-      let newClient = this.clients.filter(function (el) {
-        return el.status == "active";
-      })
+    //if (event.target.value == "all") {
+    //  this.dataSource = new MatTableDataSource(this.clients);
+    //  this.dataSource.paginator = this.paginator;
+    //  this.dataSource.sort = this.sort;
+    //}
+    //else if (event.target.value == "true") {
+    //  let newClient = this.clients.filter(function (el) {
+    //    return el.status == "active";
+    //  })
 
-      this.dataSource = new MatTableDataSource(newClient);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    }
-    else {
-      let newClient = this.clients.filter(function (el) {
-        return el.status == "inactive";
-      })
+    //  this.dataSource = new MatTableDataSource(newClient);
+    //  this.dataSource.paginator = this.paginator;
+    //  this.dataSource.sort = this.sort;
+    //}
+    //else {
+    //  let newClient = this.clients.filter(function (el) {
+    //    return el.status == "inactive";
+    //  })
 
-      this.dataSource = new MatTableDataSource(newClient);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    }
+    //  this.dataSource = new MatTableDataSource(newClient);
+    //  this.dataSource.paginator = this.paginator;
+    //  this.dataSource.sort = this.sort;
+    //}
     
 
     
