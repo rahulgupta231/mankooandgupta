@@ -176,7 +176,7 @@ export class ReturnDetailDataComponent {
 
       this.dataSource = new MatTableDataSource(this.returnManagement.clientReturns);
       this.dataSource.filterPredicate = (data: ClientReturns, filter: string) => {
-        return data.client.clientName.trim().toLowerCase().includes(filter);
+        return data.client.companyName.trim().toLowerCase().includes(filter);
       }
 
       this.dataSource.filter = this.returnFilterService.getSelectedInputFilterh();
