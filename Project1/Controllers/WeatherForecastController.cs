@@ -648,7 +648,7 @@ namespace Project1.Controllers
 
 
         [HttpGet("clients-by-category")]
-        public IEnumerable<Clients> GetClientsByCategoryId(string categoryId, string corporationId, string incorporationMonth)
+        public IEnumerable<Clients> GetClientsByCategoryId(string categoryId, string corporationId, string incorporationMonth, string clientStatus)
         {
             try
             {
@@ -660,7 +660,7 @@ namespace Project1.Controllers
 #endif
                 var clients = Serializer.Deserialize<List<Clients>>(path);
 
-                if (categoryId == "all" && corporationId == "all" && incorporationMonth == "all")
+                if (categoryId == "all" && corporationId == "all" && incorporationMonth == "all" && clientStatus == "all")
                 {
 #if DEBUG
                     var catpath1 = @"C:\POC\DeepXML\Categories.xml";
@@ -678,7 +678,7 @@ namespace Project1.Controllers
                             client.CategoryName = cat.Name;
                         }
                     }
-                    return clients?.OrderBy(x => x.SerialNumber, new DecimalComparer()).ToList().Where(x => x.Status.ToLower().Equals("active")).ToList();
+                    return clients?.OrderBy(x => x.SerialNumber, new DecimalComparer()).ToList();
                 }
 
                 if (categoryId != "all")
@@ -718,6 +718,15 @@ namespace Project1.Controllers
                     clients = clients.Where(x => x.IncorporationMonth == incorporationMonth)?.ToList();
                 }
 
+                if (clientStatus != "all")
+                {
+                    if(clientStatus == "true")
+                        clients = clients.Where(x => x.Status == "active")?.ToList();
+                    else
+                        clients = clients.Where(x => x.Status == "inactive")?.ToList();
+
+                }
+
 #if DEBUG
                 var catpath = @"C:\POC\DeepXML\Categories.xml";
 #else
@@ -735,7 +744,7 @@ namespace Project1.Controllers
                     }
                 }
 
-                return clients?.OrderBy(x => x.SerialNumber, new DecimalComparer()).ToList().Where(x => x.Status.ToLower().Equals("active")).ToList();
+                return clients?.OrderBy(x => x.SerialNumber, new DecimalComparer()).ToList();
             }
             catch (Exception ex)
             {
