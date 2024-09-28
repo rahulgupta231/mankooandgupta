@@ -556,6 +556,74 @@ namespace Project1.Controllers
             }
         }
 
+        [HttpGet("delete-client/{clientId}")]
+        public void DeleteClient(Guid clientId)
+        {
+            try
+            {
+#if DEBUG
+                var path = @"C:\POC\DeepXML\Clients.xml";
+#else
+                var path = @"D:\Data\Mankoo & Gupta\IISM&G\Clients.xml";
+#endif
+
+                var clients = Serializer.Deserialize<List<Clients>>(path);
+
+                var client = clients.FirstOrDefault(x => x.ClientId == clientId);
+
+                if (client != null)
+                {
+                    clients.Remove(client);
+
+                    Serializer.Serialize(clients, path);
+
+#if DEBUG
+                    var deleteClientPath = @"C:\POC\DeepXML\DeleteClients.xml";
+#else
+                var deleteClientPath = @"D:\Data\Mankoo & Gupta\IISM&G\DeleteClients.xml";
+#endif
+
+                    var deletedClients = Serializer.Deserialize<List<Clients>>(deleteClientPath);
+
+                    deletedClients.Add(client);
+
+                    Serializer.Serialize(deletedClients, deleteClientPath);
+
+
+
+#if DEBUG
+                    var auditLogspath = @"C:\POC\DeepXML\AuditLogs.xml";
+#else
+                var auditLogspath = @"D:\Data\Mankoo & Gupta\IISM&G\AuditLogs.xml";
+#endif
+
+                    var auditLogs = Serializer.Deserialize<List<AuditLogs>>(auditLogspath);
+
+                    var auditLog = new AuditLogs
+                    {
+                        Action = "Delete Client",
+                        AuditLogId = Guid.NewGuid(),
+                        ChangedBy = System.Environment.MachineName,
+                        ChangedDate = DateTime.Now,
+                        Previous = "",
+                        Updated = Newtonsoft.Json.JsonConvert.SerializeObject(client)
+                    };
+
+                    if (auditLogs == null)
+                        auditLogs = new List<AuditLogs>();
+
+                    auditLogs.Add(auditLog);
+                    Serializer.Serialize(auditLogs, auditLogspath);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
         [HttpPut("edit-clients/{id}")]
         public void EditClients(Guid id, Clients client)
         {

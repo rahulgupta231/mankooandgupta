@@ -7,6 +7,7 @@ import { MatFormField } from '@angular/material/form-field';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
   selector: 'app-fetch-data',
@@ -18,6 +19,35 @@ export class EmailFormComponent {
   description!: string;
   body: string = "Thanks & Regards, \nMankoo & Gupta CPA Professional Corp.";
 
+  config: AngularEditorConfig = {
+    editable: true,
+    spellcheck: true,
+    height: '15rem',
+    minHeight: '5rem',
+    placeholder: 'Enter text here...',
+    translate: 'no',
+    defaultParagraphSeparator: 'p',
+    defaultFontName: 'Arial',
+    toolbarHiddenButtons: [
+      
+    ],
+    customClasses: [
+      {
+        name: "quote",
+        class: "quote",
+      },
+      {
+        name: 'redText',
+        class: 'redText'
+      },
+      {
+        name: "titleText",
+        class: "titleText",
+        tag: "h1",
+      },
+    ]
+  };
+
   constructor(private fb: FormBuilder, public dialogRef: MatDialogRef<EmailFormComponent>) { }
 
   ngOnInit() {
@@ -28,6 +58,9 @@ export class EmailFormComponent {
   }
 
   save() {
+    this.form.value.body = this.body;
+    console.log(this.form.value);
+    console.log(this.body)
     this.dialogRef.close(this.form.value);
   }
 

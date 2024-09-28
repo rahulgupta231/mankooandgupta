@@ -286,6 +286,7 @@ public static class Serializer
 #endif
                     message.Subject = payload.Subject;
                     message.Body = payload.Body;
+                    message.IsBodyHtml = true;
                     client1.Send(message);
                 }
                 catch (Exception ex)

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
@@ -9,8 +9,8 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
-import {CategoryAddDataComponent} from "./category/category-add/category-add-data.component";
-import {CategoryViewComponent} from "./category/category-view/category-view-data.component";
+import { CategoryAddDataComponent } from "./category/category-add/category-add-data.component";
+import { CategoryViewComponent } from "./category/category-view/category-view-data.component";
 import { CorporationViewComponent } from './corporations/corporation-view/corporation-view-data.component';
 import { CorporationAddDataComponent } from './corporations/corporation-add/corporation-add-data.component';
 import { ClientAddDataComponent } from './clients/client-add/client-add-data.component';
@@ -22,6 +22,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -36,6 +37,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { EmailFormComponent } from './returns/email-form/email-form.component';
 import { ConfirmationDialog } from './confirmation-dialog/confirmation-dialog.component';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 const modules = [
   MatFormFieldModule,
@@ -49,7 +51,9 @@ const modules = [
   MatInputModule,
   MatCheckboxModule,
   MatDialogModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  AngularEditorModule,
+  MatProgressSpinnerModule
 ];
 
 @NgModule({
@@ -72,17 +76,18 @@ const modules = [
     ReturnDetailDataComponent,
     EmailFormComponent,
     ConfirmationDialog
+    
   ],
   imports: [
-    BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
+    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
     Ng2SearchPipeModule,
     RouterModule.forRoot([
-      { path: '', component: ReturnViewComponent, pathMatch: 'full'},
-      {path: 'counter', component: CounterComponent},
-      {path: 'fetch-data', component: FetchDataComponent},
-      {path: 'category-view', component: CategoryViewComponent},
+      { path: '', component: ReturnViewComponent, pathMatch: 'full' },
+      { path: 'counter', component: CounterComponent },
+      { path: 'fetch-data', component: FetchDataComponent },
+      { path: 'category-view', component: CategoryViewComponent },
       { path: 'category-add', component: CategoryAddDataComponent },
       { path: 'category-edit/:id', component: CategoryAddDataComponent },
       { path: 'corporation-view', component: CorporationViewComponent },

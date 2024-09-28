@@ -1,20 +1,25 @@
 <h2 mat-dialog-title>Email</h2>
 
+<angular-editor [(ngModel)]="body" [config]="config"></angular-editor>
+
+<br />
+
 <mat-dialog-content [formGroup]="form">
 
-  <mat-form-field>
+  <mat-form-field >
     <input matInput
            placeholder="Email Subject"
-           formControlName="description">
+           formControlName="description" required>
   </mat-form-field>
 
-  <mat-form-field>
+  <!--<mat-form-field>
+
     <textarea matInput
-           placeholder="Email Body"
-           formControlName="body"
+              placeholder="Email Body"
+              formControlName="body"
               style="height:250px;">
     </textarea>
-  </mat-form-field>
+  </mat-form-field>-->
 
 </mat-dialog-content>
 

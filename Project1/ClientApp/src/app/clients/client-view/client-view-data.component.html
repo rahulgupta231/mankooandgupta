@@ -1,3 +1,4 @@
+<mat-spinner class="mat-spinner-style" *ngIf="showSpinner"></mat-spinner>
 <h1 id="tableLabel">Clients</h1>
 
 <p *ngIf="!clients"><em>Loading...</em></p>
@@ -86,6 +87,10 @@
 
   <a (click)="generateExcel()" style="margin-left: 15px" class="btn btn-sm btn-primary mr-1">Export To Excel</a>
 
+  <a *ngIf="selection.selected.length > 0" (click)="sendEmail()" style="margin-left: 15px" class="btn btn-sm btn-primary mr-1">Send Email</a>
+
+
+
 </div>
 
 <div class="mat-app-background basic-container">
@@ -101,6 +106,21 @@
   <div>
 
     <mat-table [dataSource]="dataSource" matSort>
+
+      <ng-container matColumnDef="select">
+        <mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </mat-cell>
+      </ng-container>
 
       <!-- Serial Number Column -->
       <ng-container matColumnDef="serialNumber">
@@ -157,6 +177,8 @@
           <a routerLink="../client-edit/{{row.clientId}}" class="btn btn-sm btn-primary mr-1">Edit</a>
           <a routerLink="../client-detail/{{row.clientId}}" class="btn btn-sm btn-primary mr-1" style="margin-left:5px;">View</a>
           <a routerLink="../audit-view/{{row.clientId}}" class="btn btn-sm btn-primary mr-1" style="margin-left:5px;">Logs</a>
+          <a class="btn btn-sm btn-primary mr-1" style="margin-left:5px;" (click)="deleteClient(row.clientId)">Delete</a>
+
         </mat-cell>
       </ng-container>
 

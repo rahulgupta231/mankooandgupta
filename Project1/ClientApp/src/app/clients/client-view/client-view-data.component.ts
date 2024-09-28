@@ -6,6 +6,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatFormField } from '@angular/material/form-field';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClientFilterService } from '../../services/client-filter.service';
+import { EmailFormComponent } from '../../returns/email-form/email-form.component';
+import { MatDialog } from '@angular/material/dialog';
+import { SelectionModel } from "@angular/cdk/collections";
 
 @Component({
   selector: 'app-fetch-data',
@@ -15,12 +18,12 @@ import { ClientFilterService } from '../../services/client-filter.service';
 export class ClientViewComponent {
   public clients: Clients[] = [];
   searchText!: string;
-  displayedColumns = ['serialNumber', 'clientName', 'categoryName', 'companyName', 'email', 'address', 'phoneNumber', 'business', 'actions'];
+  displayedColumns = ['select', 'serialNumber', 'clientName', 'categoryName', 'companyName', 'email', 'address', 'phoneNumber', 'business', 'actions'];
   dataSource!: MatTableDataSource<Clients>;
   public categories: Categories[] = [];
   public corporations: Corporations[] = [];
   public incorporationMonths: any[] = [];
-
+  showSpinner = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   @ViewChild(MatSort) sort: MatSort = new MatSort();
@@ -32,12 +35,15 @@ export class ClientViewComponent {
   selectedIncorporationMonth: any;
   inputFilter: any;
 
+  selection = new SelectionModel<Clients>(true, []);
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
     @Inject('BASE_URL') baseUrl: string,
-    private clientFilterService: ClientFilterService
+    private clientFilterService: ClientFilterService,
+    private dialog: MatDialog
   ) {
     this.baseUrl = baseUrl;
   }
@@ -82,6 +88,41 @@ export class ClientViewComponent {
       }, error => console.error(error));
   }
 
+  sendEmail() {
+    this.showSpinner = true;
+
+    const dialogRef = this.dialog.open(EmailFormComponent,
+      {
+        width: "50%",
+        height: "50%",
+
+      },
+
+
+    );
+
+    var emails = this.selection.selected.map(function (el) {
+      return el.email
+    });
+    //var emails = this.clients.map(function (el) {
+    //  return el.email
+    //});
+
+    dialogRef.afterClosed().subscribe(data => {
+
+      let payload = {
+        subject: data.description,
+        body: data.body,
+        emails: emails
+      }
+
+      this.http.post(this.baseUrl + `weatherforecast/send-email`, payload)
+        .subscribe(result => {
+          this.showSpinner = false;
+        }, error => { this.showSpinner = false; });
+    });
+  }
+
   resetFilter() {
     this.clientFilterService.resetFilter();
     this.categoryId = this.clientFilterService.getSelectedCategoryId();
@@ -91,8 +132,41 @@ export class ClientViewComponent {
     this.filter();
   }
 
+  deleteClient(clientId: any) {
+    console.log(clientId);
+
+    if (confirm("Are you sure to delete")) {
+      this.http.get<Clients[]>(this.baseUrl + 'weatherforecast/delete-client/' + clientId).subscribe(result => {
+        this.getClients();
+      }, error => console.error(error));
+    }
+    
+  }
+
   ngAfterViewInit() {
    
+  }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    // if there is a selection then clear that selection
+    if (this.isSomeSelected()) {
+      this.selection.clear();
+    } else {
+      this.isAllSelected()
+        ? this.selection.clear()
+        : this.dataSource.data.forEach(row => this.selection.select(row));
+    }
+  }
+
+  isSomeSelected() {
+    return this.selection.selected.length > 0;
   }
 
   generateExcel() {
